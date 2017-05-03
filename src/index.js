@@ -5,7 +5,7 @@ import requireGitHubLogin from './requireGitHubLogin';
 import './index.css';
 
 requireGitHubLogin({
-  scope: 'gist',
+  scope: 'repo delete_repo',
   client_id: '5f5b3968f7732c6333da'
 }).then(
   token => {
@@ -13,5 +13,7 @@ requireGitHubLogin({
       <App token={token}/>,
       document.getElementById('root')
     );
+
+    document.getElementById('loading-indicator').className += 'loaded';
   }
 );
