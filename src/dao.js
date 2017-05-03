@@ -1,8 +1,10 @@
 import _ from 'underscore';
 
+const ts = () => (new Date()).getTime();
+
 export function getDatabases(token) {
   return fetch(
-    `https://api.github.com/user/repos?visibility=private`,
+    `https://api.github.com/user/repos?visibility=private&_ts=${ts()}`,
     {
       mode: 'cors',
       headers: {
@@ -19,7 +21,7 @@ export function getDatabases(token) {
 }
 
 export function createDatabase(token, database) {
-  if (database.name.length < 0) {
+  if (database.name.trim().length === 0) {
     return Promise.reject(new Error('Invalid database name!'));
   }
 
