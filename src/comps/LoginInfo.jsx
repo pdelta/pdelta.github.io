@@ -37,7 +37,7 @@ export default class LoginInfo extends PureComponent {
     return (
       <div className="display-flex align-items-center" {...this.props}>
         <div style={{ marginRight: 8 }}>
-          <img className="img-circle" style={{ width: '2em', height: '2em' }} src={avatar_url}/>
+          <img alt="github avatar" className="img-circle" style={{ width: '2em', height: '2em' }} src={avatar_url}/>
         </div>
         <div>
           <div>{name}</div>

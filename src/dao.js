@@ -19,6 +19,10 @@ export function getDatabases(token) {
 }
 
 export function createDatabase(token, database) {
+  if (database.name.length < 0) {
+    return Promise.reject(new Error('Invalid database name!'));
+  }
+
   return fetch(
     `https://api.github.com/user/repos`,
     {

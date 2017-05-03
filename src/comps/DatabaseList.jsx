@@ -1,11 +1,11 @@
-import React, { PropTypes, PureComponent } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { createDatabase, deleteDatabase, getDatabases } from '../dao';
 import _ from 'underscore';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 
 const displayName = ({ name }) => name.substring('gitlock-db-'.length);
 
-export default class GistList extends PureComponent {
+export default class DatabaseList extends Component {
   static contextTypes = {
     token: PropTypes.string.isRequired
   };
@@ -75,20 +75,24 @@ export default class GistList extends PureComponent {
         {
           databases === null ? null :
             databases.length > 0 ?
-              _.map(
-                databases,
-                database => (
-                  <div key={database.id} className="display-flex">
-                    <div className="flex-grow-1">
-                      <Link to={`/db/${database.id}`}>{displayName(database)}</Link>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <i className="fa fa-trash text-danger" style={{ cursor: 'pointer' }}
-                         onClick={e => this.deleteDb(database)}/>
-                    </div>
-                  </div>
-                )
-              ) :
+              <ul className="nav nav-pills nav-stacked">
+                {
+                  _.map(
+                    databases,
+                    database => (
+                      <Route key={database.id} path={`/db/${database.id}`}>
+                        {
+                          ({ match }) => (
+                            <li role="presentation" className={match ? 'active' : ''}>
+                              <Link to={`/db/${database.id}`}>{displayName(database)}</Link>
+                            </li>
+                          )
+                        }
+                      </Route>
+                    )
+                  )
+                }
+              </ul> :
               <div>No databases found!</div>
         }
 
