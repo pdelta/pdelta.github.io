@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import LoginInfo from './LoginInfo';
+import React, { Component } from "react";
+import LoginInfo from "./LoginInfo";
+import { GITHUB_TOKEN_KEY } from "../requireGitHubLogin";
 
 export default class Nav extends Component {
+  logOut = e => {
+    e.preventDefault();
+    localStorage.removeItem(GITHUB_TOKEN_KEY);
+    location.href = location.href;
+  };
+
   render() {
     return (
       <nav className="navbar navbar-inverse navbar-static-top" style={{ margin: 0 }}>
@@ -13,6 +20,12 @@ export default class Nav extends Component {
           <div className="navbar-text">
             <LoginInfo />
           </div>
+
+          <p className="navbar-text">
+            <a className="navbar-link" href="#" onClick={this.logOut}>
+              Sign Out
+            </a>
+          </p>
         </div>
       </nav>
     );

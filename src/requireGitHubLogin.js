@@ -1,8 +1,8 @@
-import crypto from 'crypto';
-import qs from 'qs';
-import _ from 'underscore';
+import crypto from "crypto";
+import qs from "qs";
+import _ from "underscore";
 
-const GITHUB_STATE_KEY = 'github_state',
+export const GITHUB_STATE_KEY = 'github_state',
   GITHUB_TOKEN_KEY = 'github_token';
 
 const randomString = len => {
@@ -36,6 +36,15 @@ function tradeCodeForToken({ code, state }) {
     );
 }
 
+export function goToLogin({ client_id, scope, redirect_uri }) {
+  // state variable to prevent csrf
+  const state = randomString(10);
+  localStorage.setItem(GITHUB_STATE_KEY, state);
+
+  location.href =
+    `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
+}
+
 const cleanScopeArray = scopes => _.chain(scopes)
   .filter(s => typeof s === 'string')
   .filter(s => s.trim().length > 0)
@@ -51,6 +60,15 @@ function getScopes(token) {
         'Authorization': `token ${token}`
       }
     })
+    .then(
+      res => {
+        if (res.status !== 200) {
+          throw new Error('invalid token!');
+        }
+
+        return res;
+      }
+    )
     .then(res => cleanScopeArray(res.headers.get('X-OAuth-Scopes').split(',')));
 }
 
@@ -70,14 +88,7 @@ export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
     // log the error
     console.error(error);
 
-    // state variable to prevent csrf
-    const state = randomString(10);
-    localStorage.setItem(GITHUB_STATE_KEY, state);
-
-    location.href =
-      `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
-
-    return Promise.reject(new Error('returning to log in!'));
+    return Promise.reject(error);
   };
 
   if (typeof location.search === 'string' && location.search.length > 1) {
