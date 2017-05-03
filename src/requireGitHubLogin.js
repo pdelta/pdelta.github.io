@@ -1,9 +1,17 @@
-import randomString from 'crypto-random-string';
+import crypto from 'crypto';
 import qs from 'qs';
 import _ from 'underscore';
 
 const GITHUB_STATE_KEY = 'github_state',
   GITHUB_TOKEN_KEY = 'github_token';
+
+const randomString = len => {
+  if (!Number.isFinite(len)) {
+    throw new TypeError('Expected a finite number');
+  }
+
+  return crypto.randomBytes(Math.ceil(len / 2)).toString('hex').slice(0, len);
+};
 
 function tradeCodeForToken({ code, state }) {
   return fetch(
