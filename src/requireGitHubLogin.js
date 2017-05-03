@@ -1,6 +1,7 @@
-import crypto from "crypto";
-import qs from "qs";
-import _ from "underscore";
+import crypto from 'crypto';
+import qs from 'qs';
+import _ from 'underscore';
+import { expectStatus } from './dao';
 
 export const GITHUB_STATE_KEY = 'github_state',
   GITHUB_TOKEN_KEY = 'github_token';
@@ -13,7 +14,7 @@ const randomString = len => {
   return crypto.randomBytes(Math.ceil(len / 2)).toString('hex').slice(0, len);
 };
 
-function tradeCodeForToken({ code, state }) {
+function tradeCodeForToken({ code, state, client_id }) {
   return fetch(
     'https://5rcclflcdh.execute-api.us-west-2.amazonaws.com/prod/access_token',
     {
@@ -22,7 +23,7 @@ function tradeCodeForToken({ code, state }) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({ code, state })
+      body: JSON.stringify({ code, state, client_id })
     })
     .then(res => res.json())
     .then(
@@ -53,22 +54,8 @@ const cleanScopeArray = scopes => _.chain(scopes)
 
 // hits the profile endpoint and gets the scopes for the token out the header
 function getScopes(token) {
-  return fetch(
-    'https://api.github.com/user',
-    {
-      headers: {
-        'Authorization': `token ${token}`
-      }
-    })
-    .then(
-      res => {
-        if (res.status !== 200) {
-          throw new Error('invalid token!');
-        }
-
-        return res;
-      }
-    )
+  return fetch('https://api.github.com/user', { headers: { Authorization: `token ${token}` } })
+    .then(expectStatus(200, 'invalid token'))
     .then(res => cleanScopeArray(res.headers.get('X-OAuth-Scopes').split(',')));
 }
 
@@ -98,7 +85,7 @@ export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
     try {
       const queryData = qs.parse(location.search.substr(1));
 
-      return tradeCodeForToken({ code: queryData.code, state: storedState })
+      return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
         .then(
           access_token => {
             location.search = qs.stringify(_.omit(queryData, [ 'code', 'state' ]));

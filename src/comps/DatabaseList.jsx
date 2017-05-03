@@ -40,8 +40,12 @@ export default class DatabaseList extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { newDbName } = this.state;
+    const { newDbName, promise } = this.state;
     const { token } = this.context;
+
+    if (promise !== null) {
+      return;
+    }
 
     this.setState({
       promise: createDatabase(token, { name: newDbName })
@@ -79,21 +83,24 @@ export default class DatabaseList extends Component {
                 {
                   _.map(
                     databases,
-                    database => (
-                      <Route key={database.id} path={`/db/${database.id}`}>
-                        {
-                          ({ match }) => (
-                            <li role="presentation" className={match ? 'active' : ''}>
-                              <Link to={`/db/${database.id}`}>{displayName(database)}</Link>
-                            </li>
-                          )
-                        }
-                      </Route>
-                    )
+                    database => {
+                      const path = `/db/${database.owner.login}/${displayName(database)}`;
+                      return (
+                        <Route key={database.id} path={path}>
+                          {
+                            ({ match }) => (
+                              <li role="presentation" className={match ? 'active' : ''}>
+                                <Link to={path}>{displayName(database)}</Link>
+                              </li>
+                            )
+                          }
+                        </Route>
+                      );
+                    }
                   )
                 }
               </ul> :
-              <div>No databases found!</div>
+              <div className="alert alert-info">No database repositories found!</div>
         }
 
         <hr />

@@ -23,7 +23,7 @@ export default class App extends Component {
       <Router>
         <AppShell>
           <Switch>
-            <Route path="/db/:id" component={DatabasePage}/>
+            <Route path="/db/:owner/:repo" component={DatabasePage}/>
             <Route component={SelectDatabase}/>
           </Switch>
         </AppShell>

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import LoginInfo from "./LoginInfo";
-import { GITHUB_TOKEN_KEY } from "../requireGitHubLogin";
+import React, { Component } from 'react';
+import LoginInfo from './LoginInfo';
+import { GITHUB_TOKEN_KEY } from '../requireGitHubLogin';
 
 export default class Nav extends Component {
   logOut = e => {
     e.preventDefault();
     localStorage.removeItem(GITHUB_TOKEN_KEY);
-    location.href = location.href;
+    location.href = location.origin;
   };
 
   render() {
@@ -21,7 +21,7 @@ export default class Nav extends Component {
             <LoginInfo />
           </div>
 
-          <p className="navbar-text">
+          <p className="navbar-text" style={{ marginLeft: 10 }}>
             <a className="navbar-link" href="#" onClick={this.logOut}>
               Sign Out
             </a>

@@ -1,4 +1,5 @@
 import React, { PropTypes, PureComponent } from 'react';
+import { getProfile } from '../dao';
 
 export default class LoginInfo extends PureComponent {
   static contextTypes = {
@@ -14,14 +15,8 @@ export default class LoginInfo extends PureComponent {
   componentDidMount() {
     const { token } = this.context;
 
-    fetch(
-      'https://api.github.com/user',
-      {
-        headers: {
-          'Authorization': `token ${token}`
-        }
-      })
-      .then(res => res.json())
+    getProfile(token)
+      .then()
       .then(profile => this.setState({ profile }));
   }
 

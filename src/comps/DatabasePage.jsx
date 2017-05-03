@@ -1,44 +1,56 @@
 import React, { PropTypes, PureComponent } from 'react';
-import { deleteDatabase, getDatabases } from '../dao';
-import _ from 'underscore';
+import { deleteDatabase, getDatabase } from '../dao';
 
 export default class DatabasePage extends PureComponent {
   static contextTypes = {
     token: PropTypes.string.isRequired
   };
+
   static propTypes = {
-    match: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        owner: PropTypes.string.isRequired,
+        repo: PropTypes.string.isRequired
+      })
+    }).isRequired
   };
+
   static defaultProps = {};
 
   deleteDb = () => {
-    const { match: { params: { id } } } = this.props;
+    const { match: { params: { owner, repo } } } = this.props;
     const { token } = this.context;
+    const dbName = `${owner}/${repo}`;
 
-    if (confirm(`Delete database?`)) {
-      getDatabases(token)
-        .then(
-          databases => _.findWhere(databases, { id: +id })
-        )
-        .then(
-          database => deleteDatabase(token, database)
-        )
-        .then(
-          () => alert('Deleted!')
-        );
+    const typeName = prompt(`Type database name to delete: ${dbName}`);
+
+    if (typeName === dbName) {
+      getDatabase(token, owner, repo)
+        .then(database => deleteDatabase(token, database))
+        .then(() => alert('Deleted!'))
+        .catch(error => alert(error.message));
+    } else if (typeName !== null) {
+      alert('invalid name!');
     }
   };
 
+  loadDb = id => {
+    const { token } = this.context;
+
+
+  };
+
+
   render() {
-    const { match: { params: { id } } } = this.props;
+    const { match: { params: { owner, repo } } } = this.props;
 
     return (
       <div>
-        <h1 className="display-flex">
-          <div className="flex-grow-1">{id}</div>
-          <div className="flex-shrink-0">
+        <h1>
+          <span>{repo}</span>
+          <small style={{ marginLeft: 10 }}>
             <i className="fa fa-trash text-danger" style={{ cursor: 'pointer' }} onClick={this.deleteDb}/>
-          </div>
+          </small>
         </h1>
       </div>
     );
