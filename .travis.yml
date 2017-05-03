@@ -8,6 +8,7 @@ cache:
   - "$HOME/.yarn-cache"
 install:
 - "yarn"
+script:
 - "yarn build"
 before_deploy:
 - "rm -rf deploy"
