@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { getData, saveData } from '../dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../crypt';
+import DatabaseData from './DatabaseData';
 
 export default class Passwords extends PureComponent {
   static contextTypes = {
@@ -26,7 +27,7 @@ export default class Passwords extends PureComponent {
   }
 
   componentWillReceiveProps({ database }) {
-    if (this.props.database !== database) {
+    if (this.props.database.id !== database.id) {
       this.loadData(database);
     }
   }
@@ -49,27 +50,31 @@ export default class Passwords extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { password, promise, encryptedData } = this.state;
+    const { database: { full_name } } = this.props;
 
     if (promise !== null) {
       return;
     }
 
     if (encryptedData === null) {
-      const encodedSeed = encodeData({}, password);
-
       // create the data file
       this.setState({
-        promise: saveData(this.context.token, this.props.database, encodedSeed)
+        promise: saveData(this.context.token, this.props.database, encodeData({
+          'My First Entry!': {
+            username: 'hello',
+            password: 'world'
+          }
+        }, password, full_name))
           .then(
             data => {
-              const decodedData = decodeData(data, password);
+              const decodedData = decodeData(data, password, full_name);
 
               this.setState({ promise: null, encryptedData, decodedData });
             }
           )
       });
     } else {
-      const decodedData = decodeData(encryptedData, password);
+      const decodedData = decodeData(encryptedData, password, full_name);
       this.setState({ decodedData }, () => {
         if (decodedData === null) {
           this.refs.password.focus();
@@ -82,7 +87,7 @@ export default class Passwords extends PureComponent {
     const { password, confirmPassword, encryptedData, decodedData, promise } = this.state;
 
     if (decodedData !== null) {
-      return <div>Decoded!</div>;
+      return <DatabaseData data={decodedData}/>;
     }
 
     if (promise !== null) {
@@ -112,7 +117,8 @@ export default class Passwords extends PureComponent {
             ) : null
           }
 
-          <button className="btn btn-primary" disabled={(isNew && password !== confirmPassword) || password.length < 1}>
+          <button className="btn btn-primary" type="submit"
+                  disabled={(isNew && password !== confirmPassword) || password.length < 1}>
             <i className="fa fa-key"/> Unlock
           </button>
         </form>
