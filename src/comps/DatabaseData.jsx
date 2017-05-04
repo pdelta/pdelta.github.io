@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 import { ActiveLi } from './ActiveLi';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 
 export default class DatabaseData extends Component {
@@ -20,23 +20,29 @@ export default class DatabaseData extends Component {
 
     return (
       <div>
-        {
-          stores.length > 0 ?
-            <ul className="nav nav-pills">
-              {
-                _.map(
-                  stores,
-                  store => (
-                    <ActiveLi key={store} to={`/db/${login}/${name}/${store}`}>{store}</ActiveLi>
+        <Switch>
+          <Route path={`/db/${login}/${name}/:store`}
+                 component={
+                   ({ match: { params: { store } } }) => (
+                     data[ store ] ? <span>{store}</span> :
+                       <div className="alert alert-warning">invalid item!</div>
+                   )
+                 }/>
+          <Route component={({}) => (
+            stores.length > 0 ?
+              <ul className="nav nav-pills">
+                {
+                  _.map(
+                    stores,
+                    store => (
+                      <ActiveLi key={store} to={`/db/${login}/${name}/${store}`}>{store}</ActiveLi>
+                    )
                   )
-                )
-              }
-            </ul> :
-            <div className="alert alert-info">No objects in this database!</div>
-        }
-
-        <Route path={`/db/${login}/${name}/:store`}
-               component={({ match: { params: { store } } }) => <span>{store}</span>}/>
+                }
+              </ul> :
+              <div className="alert alert-info">No objects in this database!</div>
+          )}/>
+        </Switch>
       </div>
     );
   }
