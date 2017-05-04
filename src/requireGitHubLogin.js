@@ -3,7 +3,7 @@ import _ from 'underscore';
 import { expectStatus } from './dao';
 import { randomString } from './crypt';
 
-export const GITHUB_STATE_KEY = 'github_state',
+const GITHUB_STATE_KEY = 'github_state',
   GITHUB_TOKEN_KEY = 'github_token';
 
 function tradeCodeForToken({ code, state, client_id }) {
@@ -32,10 +32,14 @@ function tradeCodeForToken({ code, state, client_id }) {
 export function goToLogin({ client_id, scope, redirect_uri }) {
   // state variable to prevent csrf
   const state = randomString(10);
-  localStorage.setItem(GITHUB_STATE_KEY, state);
+  sessionStorage.setItem(GITHUB_STATE_KEY, state);
 
   location.href =
     `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
+}
+
+export function clearToken() {
+  sessionStorage.removeItem(GITHUB_STATE_KEY);
 }
 
 const cleanScopeArray = scopes => _.chain(scopes)
@@ -52,8 +56,8 @@ function getScopes(token) {
 }
 
 export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
-  const storedToken = localStorage.getItem(GITHUB_TOKEN_KEY),
-    storedState = localStorage.getItem(GITHUB_STATE_KEY);
+  const storedToken = sessionStorage.getItem(GITHUB_TOKEN_KEY),
+    storedState = sessionStorage.getItem(GITHUB_STATE_KEY);
 
   const hasAllScopes = scopes => _.all(
     cleanScopeArray(scope.split(' ')),
@@ -62,7 +66,7 @@ export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
 
   const handleError = error => {
     // we are not logged in if we encounter an error
-    localStorage.removeItem(GITHUB_TOKEN_KEY);
+    sessionStorage.removeItem(GITHUB_TOKEN_KEY);
 
     // log the error
     console.error(error);
@@ -72,7 +76,7 @@ export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
 
   if (typeof location.search === 'string' && location.search.length > 1) {
     // user attempted to log in
-    localStorage.removeItem(GITHUB_TOKEN_KEY);
+    sessionStorage.removeItem(GITHUB_TOKEN_KEY);
 
     try {
       const queryData = qs.parse(location.search.substr(1));
@@ -81,7 +85,7 @@ export default function requireGitHubLogin({ scope, client_id, redirect_uri }) {
         .then(
           access_token => {
             location.search = qs.stringify(_.omit(queryData, [ 'code', 'state' ]));
-            localStorage.setItem(GITHUB_TOKEN_KEY, access_token);
+            sessionStorage.setItem(GITHUB_TOKEN_KEY, access_token);
             return Promise.all([ access_token, getScopes(access_token) ]);
           }
         )

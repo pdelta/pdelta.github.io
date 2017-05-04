@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getProfile } from '../dao';
 
-export default class LoginInfo extends PureComponent {
+export default class LoginInfo extends Component {
   static contextTypes = {
     token: PropTypes.string.isRequired
   };

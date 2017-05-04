@@ -1,10 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { deleteDatabase, getDatabase } from '../dao';
 import Passwords from './Passwords';
 import Spinner from './Spinner';
+import _ from 'underscore';
 
-export default class DatabasePage extends PureComponent {
+export default class DatabasePage extends Component {
   static contextTypes = {
     token: PropTypes.string.isRequired
   };
@@ -26,12 +27,12 @@ export default class DatabasePage extends PureComponent {
   };
 
   componentDidMount() {
-    this.loadDb(this.props.match);
+    this.loadDb(this.props.match.params);
   }
 
-  componentWillReceiveProps({ match }) {
-    if (this.props.match !== match) {
-      this.loadDb(match);
+  componentWillReceiveProps({ match: { params: { owner, repo } } }) {
+    if (!_.isEqual({ owner, repo }, this.props.match.params)) {
+      this.loadDb({ owner, repo });
     }
   }
 
@@ -54,7 +55,7 @@ export default class DatabasePage extends PureComponent {
     }
   };
 
-  loadDb = ({ params: { owner, repo } }) => {
+  loadDb = ({ owner, repo }) => {
     const { token } = this.context;
 
     this.setState({

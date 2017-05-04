@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getData, saveData } from '../dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../crypt';
 import DatabaseData from './DatabaseData';
 
-export default class Passwords extends PureComponent {
+export default class Passwords extends Component {
   static contextTypes = {
     token: PropTypes.string.isRequired
   };
@@ -87,7 +87,7 @@ export default class Passwords extends PureComponent {
     const { password, confirmPassword, encryptedData, decodedData, promise } = this.state;
 
     if (decodedData !== null) {
-      return <DatabaseData data={decodedData}/>;
+      return <DatabaseData data={decodedData} database={this.props.database}/>;
     }
 
     if (promise !== null) {

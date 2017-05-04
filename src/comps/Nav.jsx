@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import LoginInfo from './LoginInfo';
-import { GITHUB_TOKEN_KEY } from '../requireGitHubLogin';
+import { clearToken } from '../requireGitHubLogin';
 
 export default class Nav extends Component {
   logOut = e => {
     e.preventDefault();
-    localStorage.removeItem(GITHUB_TOKEN_KEY);
+    clearToken();
     location.href = location.origin;
   };
 

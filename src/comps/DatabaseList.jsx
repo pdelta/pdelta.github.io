@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createDatabase, getDatabases } from '../dao';
 import _ from 'underscore';
-import { Link, Route } from 'react-router-dom';
+import { ActiveLi } from './ActiveLi';
 
 export default class DatabaseList extends Component {
   static contextTypes = {
@@ -71,20 +71,12 @@ export default class DatabaseList extends Component {
                 {
                   _.map(
                     databases,
-                    database => {
-                      const path = `/db/${database.owner.login}/${database.name}`;
-                      return (
-                        <Route key={database.id} path={path}>
-                          {
-                            ({ match }) => (
-                              <li role="presentation" className={match ? 'active' : ''}>
-                                <Link to={path}>{database.owner.login}/{database.name}</Link>
-                              </li>
-                            )
-                          }
-                        </Route>
-                      );
-                    }
+                    database => (
+                      <ActiveLi key={database.id} role="presentation"
+                                to={`/db/${database.owner.login}/${database.name}`}>
+                        {database.owner.login}/{database.name}
+                      </ActiveLi>
+                    )
                   )
                 }
               </ul> :

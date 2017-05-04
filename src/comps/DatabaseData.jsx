@@ -1,18 +1,19 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
-import { Link, Route } from 'react-router-dom';
+import { ActiveLi } from './ActiveLi';
 
-export default class DatabaseData extends PureComponent {
+export default class DatabaseData extends Component {
   static contextTypes = {};
   static propTypes = {
+    database: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
   };
   static defaultProps = {};
 
   render() {
-    const { data } = this.props;
+    const { database: { owner: { login }, name }, data } = this.props;
     const stores = _.keys(data);
 
     return (
@@ -24,11 +25,7 @@ export default class DatabaseData extends PureComponent {
                 _.map(
                   stores,
                   store => (
-                    <Route key={store} path={store} children={({ match }) => (
-                      <li key={store} role="presentation" className={match ? 'active' : ''}>
-                        <Link to={store}>{store}</Link>
-                      </li>
-                    )}/>
+                    <ActiveLi key={store} to={`/db/${login}/${name}/${store}`}>{store}</ActiveLi>
                   )
                 )
               }

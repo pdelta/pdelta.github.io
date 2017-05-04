@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
-export default class Spinner extends PureComponent {
+export default class Spinner extends Component {
   render() {
     return (
       <div className="text-center" style={{ margin: 50 }}>
