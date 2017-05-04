@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import requireGitHubLogin, { goToLogin } from "./requireGitHubLogin";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import requireGitHubLogin, { goToLogin } from './requireGitHubLogin';
+import './index.css';
 
 const render = el => {
   ReactDOM.render(el, document.getElementById('root'));
@@ -10,7 +10,7 @@ const render = el => {
 };
 
 requireGitHubLogin({
-  scope: 'repo delete_repo',
+  scope: 'repo',
   client_id: '5f5b3968f7732c6333da'
 })
   .then(
@@ -27,7 +27,7 @@ requireGitHubLogin({
             <div>
               <button className="btn btn-primary btn-sm" onClick={e => {
                 e.preventDefault();
-                goToLogin({ scope: 'repo delete_repo', client_id: '5f5b3968f7732c6333da' })
+                goToLogin({ scope: 'repo delete_repo', client_id: '5f5b3968f7732c6333da' });
               }}><i className="fa fa-sign-in"/> log in
               </button>
             </div>

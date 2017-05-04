@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { deleteDatabase, getDatabase } from '../dao';
+import { getDatabase } from '../dao';
 import Passwords from './Passwords';
 import Spinner from './Spinner';
 import _ from 'underscore';
@@ -36,25 +36,6 @@ export default class DatabasePage extends Component {
     }
   }
 
-  deleteDb = () => {
-    const { match: { params: { owner, repo } } } = this.props;
-    const { token } = this.context;
-    const dbName = `${owner}/${repo}`;
-
-    const typeName = prompt(`Type database name to delete: ${dbName}`);
-
-    if (typeName === dbName) {
-      this.setState({
-        promise: getDatabase(token, owner, repo)
-          .then(database => deleteDatabase(token, database))
-          .then(() => alert('Deleted!'))
-          .catch(error => alert(error.message))
-      });
-    } else if (typeName !== null) {
-      alert('invalid name!');
-    }
-  };
-
   loadDb = ({ owner, repo }) => {
     const { token } = this.context;
 
@@ -65,7 +46,6 @@ export default class DatabasePage extends Component {
         .catch(error => this.setState({ promise: null }))
     });
   };
-
 
   render() {
     const { database, promise } = this.state;
@@ -78,15 +58,12 @@ export default class DatabasePage extends Component {
       }
     }
 
-    const { owner: { login }, name } = database;
+    const { owner: { login }, html_url, name } = database;
 
     return (
       <div>
         <h1 className="page-header">
-          <span>{login}/{name}</span>
-          <small style={{ marginLeft: 10 }}>
-            <i className="fa fa-trash text-danger" style={{ cursor: 'pointer' }} onClick={this.deleteDb}/>
-          </small>
+          <a href={html_url} target="_blank" rel="noopener noreferrer nofollow">{login}/{name}</a>
         </h1>
 
         <div>

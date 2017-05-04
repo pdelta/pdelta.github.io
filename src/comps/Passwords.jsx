@@ -4,10 +4,12 @@ import { getData, saveData } from '../dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../crypt';
 import DatabaseData from './DatabaseData';
+import NSP from './NSP';
 
 export default class Passwords extends Component {
   static contextTypes = {
-    token: PropTypes.string.isRequired
+    token: PropTypes.string.isRequired,
+    ...NSP.childContextTypes
   };
   static propTypes = {
     database: PropTypes.object.isRequired
@@ -72,12 +74,14 @@ export default class Passwords extends Component {
               this.setState({ promise: null, encryptedData, decodedData });
             }
           )
+          .catch(this.context.onError)
       });
     } else {
       const decodedData = decodeData(encryptedData, password, full_name);
       this.setState({ decodedData }, () => {
         if (decodedData === null) {
-          this.refs.password.focus();
+          this.refs.password.select();
+          this.context.onError('invalid password');
         }
       });
     }

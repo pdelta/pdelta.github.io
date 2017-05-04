@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { createDatabase, getDatabases } from '../dao';
 import _ from 'underscore';
 import { ActiveLi } from './ActiveLi';
+import NSP from './NSP';
 
 export default class DatabaseList extends Component {
   static contextTypes = {
-    token: PropTypes.string.isRequired
+    token: PropTypes.string.isRequired,
+    ...NSP.childContextTypes
   };
   static propTypes = {};
   static defaultProps = {};
@@ -55,7 +57,10 @@ export default class DatabaseList extends Component {
             newDbName: ''
           })
         )
-        .catch(error => this.setState({ promise: null }))
+        .catch(error => {
+          this.setState({ promise: null });
+          this.context.onError(error);
+        })
     });
   };
 

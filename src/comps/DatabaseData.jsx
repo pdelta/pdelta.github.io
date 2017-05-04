@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 import { ActiveLi } from './ActiveLi';
+import { Route } from 'react-router-dom';
+
 
 export default class DatabaseData extends Component {
   static contextTypes = {};
@@ -32,6 +34,9 @@ export default class DatabaseData extends Component {
             </ul> :
             <div className="alert alert-info">No objects in this database!</div>
         }
+
+        <Route path={`/db/${login}/${name}/:store`}
+               component={({ match: { params: { store } } }) => <span>{store}</span>}/>
       </div>
     );
   }
