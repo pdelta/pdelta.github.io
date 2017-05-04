@@ -1,6 +1,12 @@
 import _ from 'underscore';
+import join from 'url-join';
 
 const ts = () => (new Date()).getTime();
+
+const GITLOCK_DB_PREFIX = 'gitlock-db-',
+  toRepoName = str => `${GITLOCK_DB_PREFIX}${str}`,
+  toDbName = str => str.substring(GITLOCK_DB_PREFIX.length);
+
 
 export const expectStatus = (expectedStatus, msg = 'api failure!') =>
   res => {
@@ -13,8 +19,8 @@ export const expectStatus = (expectedStatus, msg = 'api failure!') =>
 
 const toJson = res => res.json();
 
-const jf = (token, url, options) => fetch(
-  url,
+const jf = (token, path, options) => fetch(
+  join('https://api.github.com', path),
   {
     ...options,
     mode: 'cors',
@@ -28,24 +34,53 @@ const jf = (token, url, options) => fetch(
 );
 
 export function getProfile(token) {
-  return jf(token, 'https://api.github.com/user')
+  return jf(token, 'user')
     .then(expectStatus(200, 'failed to fetch profile'))
     .then(toJson);
 }
 
 export function getDatabases(token) {
-  return jf(token, `https://api.github.com/user/repos?visibility=private&_ts=${ts()}`)
+  return jf(token, `user/repos?visibility=private&_ts=${ts()}`)
     .then(expectStatus(200, 'failed to list databases'))
     .then(toJson)
     .then(
-      repositories => _.filter(repositories, ({ name }) => name.indexOf('gitlock-db-') === 0)
+      repositories => _.filter(repositories, ({ name }) => name.indexOf(GITLOCK_DB_PREFIX) === 0)
+    )
+    .then(
+      repositories => _.map(repositories, ({ name, ...rest }) => ({
+        ...rest,
+        name: toDbName(name)
+      }))
     );
 }
 
 export function getDatabase(token, owner, name) {
-  return jf(token, `https://api.github.com/repos/${owner}/gitlock-db-${name}?_ts=${ts()}`)
+  return jf(token, `repos/${owner}/${toRepoName(name)}?_ts=${ts()}`)
     .then(expectStatus(200))
-    .then(toJson);
+    .then(toJson)
+    .then(
+      ({ name, ...rest }) => ({ name: toDbName(name), ...rest })
+    );
+}
+
+export function saveData(token, { owner: { login }, name }, data) {
+  return jf(
+    token,
+    `repos/${login}/${toRepoName(name)}/contents/data`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: 'gitlock-db-update-db',
+        content: data
+      })
+    });
+}
+
+export function getData(token, { owner: { login }, name }) {
+  return jf(token, `repos/${login}/${toRepoName(name)}/contents/data?_ts=${ts()}`)
+    .then(expectStatus(200))
+    .then(toJson)
+    .then(({ content }) => content);
 }
 
 export function createDatabase(token, database) {
@@ -53,7 +88,7 @@ export function createDatabase(token, database) {
     return Promise.reject(new Error('Invalid database name!'));
   }
 
-  return jf(token, `https://api.github.com/user/repos`,
+  return jf(token, `user/repos`,
     {
       method: 'POST',
       body: JSON.stringify({
@@ -67,6 +102,6 @@ export function createDatabase(token, database) {
 }
 
 export function deleteDatabase(token, { owner: { login }, name }) {
-  return jf(token, `https://api.github.com/repos/${login}/${name}`, { method: 'DELETE' })
+  return jf(token, `repos/${login}/${name}`, { method: 'DELETE' })
     .then(expectStatus(204));
 }

@@ -1,9 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { createDatabase, deleteDatabase, getDatabases } from '../dao';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { createDatabase, getDatabases } from '../dao';
 import _ from 'underscore';
 import { Link, Route } from 'react-router-dom';
-
-const displayName = ({ name }) => name.substring('gitlock-db-'.length);
 
 export default class DatabaseList extends Component {
   static contextTypes = {
@@ -60,17 +59,6 @@ export default class DatabaseList extends Component {
     });
   };
 
-  deleteDb = database => {
-    if (confirm(`Delete database: ${displayName(database)}`)) {
-      this.setState({
-        promise: deleteDatabase(this.context.token, database)
-          .then(
-            () => this.setState({ databases: _.without(this.state.databases, database), promise: null })
-          )
-      });
-    }
-  };
-
   render() {
     const { databases, promise, newDbName } = this.state;
 
@@ -84,13 +72,13 @@ export default class DatabaseList extends Component {
                   _.map(
                     databases,
                     database => {
-                      const path = `/db/${database.owner.login}/${displayName(database)}`;
+                      const path = `/db/${database.owner.login}/${database.name}`;
                       return (
                         <Route key={database.id} path={path}>
                           {
                             ({ match }) => (
                               <li role="presentation" className={match ? 'active' : ''}>
-                                <Link to={path}>{displayName(database)}</Link>
+                                <Link to={path}>{database.owner.login}/{database.name}</Link>
                               </li>
                             )
                           }

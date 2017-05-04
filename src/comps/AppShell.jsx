@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import DatabaseList from './DatabaseList';
 import Nav from './Nav';
-import NotificationSystem from 'react-notification-system';
 
 export default class AppShell extends Component {
-  static childContextTypes = {
-    addNotification: PropTypes.func.isRequired
-  };
-
-  addNotification = (...args) => {
-    console.log('Notification triggered', ...args);
-    this.notificationSystem.addNotification(...args);
-  };
-
   render() {
     return (
       <div style={{ width: '100vw', height: '100vh' }}
@@ -31,7 +20,6 @@ export default class AppShell extends Component {
             </div>
           </div>
         </div>
-        <NotificationSystem ref={notificationSystem => this.notificationSystem = notificationSystem}/>
       </div>
     );
   }
