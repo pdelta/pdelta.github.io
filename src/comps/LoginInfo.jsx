@@ -38,7 +38,7 @@ export default class LoginInfo extends Component {
         <div>
           <div>{name}</div>
           <div>
-            <a href={html_url} className="navbar-link" target="_blank" rel="noopener noreferrer nofollow">
+            <a className="navbar-link" href={html_url} target="_blank" rel="noopener noreferrer nofollow">
               <small>{login}</small>
             </a>
           </div>

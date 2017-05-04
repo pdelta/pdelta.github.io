@@ -17,9 +17,7 @@ export default class Nav extends Component {
             <a className="navbar-brand" href="#">GitLock <i className="fa fa-lock"/></a>
           </div>
 
-          <div className="navbar-text">
-            <LoginInfo />
-          </div>
+          <LoginInfo style={{color:'white'}}/>
 
           <p className="navbar-text" style={{ marginLeft: 10 }}>
             <a className="navbar-link" href="#" onClick={this.logOut}>
