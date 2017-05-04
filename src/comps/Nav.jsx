@@ -19,7 +19,7 @@ export default class Nav extends Component {
 
           <LoginInfo style={{color:'white'}}/>
 
-          <p className="navbar-text" style={{ marginLeft: 10 }}>
+          <p className="navbar-text" style={{ marginLeft: 20 }}>
             <a className="navbar-link" href="#" onClick={this.logOut}>
               Sign Out
             </a>
