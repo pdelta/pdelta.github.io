@@ -99,7 +99,7 @@ export default class DatabaseList extends Component {
             <div className="display-flex align-items-center">
               <div className="flex-grow-1">
                 <input type="text" className="form-control" disabled={promise !== null} value={newDbName}
-                       placeholder="Personal Passwords"
+                       placeholder="my-passwords"
                        onChange={this.changeNewDbName}/>
               </div>
 

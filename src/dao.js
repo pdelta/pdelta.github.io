@@ -7,11 +7,20 @@ const GITLOCK_DB_PREFIX = 'gitlock-db-',
   toRepoName = str => `${GITLOCK_DB_PREFIX}${str}`,
   toDbName = str => str.substring(GITLOCK_DB_PREFIX.length);
 
-
 export const expectStatus = (expectedStatus, msg = 'api failure!') =>
   res => {
     if (res.status !== expectedStatus) {
-      throw new Error(msg);
+      return res.json()
+        .catch(
+          error => {
+            throw new Error(msg);
+          }
+        )
+        .then(
+          errorJson => {
+            throw new Error(errorJson.message);
+          }
+        );
     }
 
     return res;
@@ -70,17 +79,19 @@ export function saveData(token, { owner: { login }, name }, data) {
     {
       method: 'PUT',
       body: JSON.stringify({
-        message: 'gitlock-db-update-db',
-        content: data
+        message: `${GITLOCK_DB_PREFIX}update-db`,
+        content: btoa(data)
       })
-    });
+    })
+    .then(expectStatus(201))
+    .then(() => getData(token, { owner: { login }, name }));
 }
 
 export function getData(token, { owner: { login }, name }) {
   return jf(token, `repos/${login}/${toRepoName(name)}/contents/data?_ts=${ts()}`)
     .then(expectStatus(200))
     .then(toJson)
-    .then(({ content }) => content);
+    .then(({ content }) => atob(content));
 }
 
 export function createDatabase(token, database) {
@@ -93,15 +104,18 @@ export function createDatabase(token, database) {
       method: 'POST',
       body: JSON.stringify({
         ...database,
-        name: `gitlock-db-${database.name}`,
+        name: `${GITLOCK_DB_PREFIX}${database.name}`,
         private: true
       })
     })
     .then(expectStatus(201))
-    .then(toJson);
+    .then(toJson)
+    .then(
+      ({ name, ...rest }) => ({ ...rest, name: toDbName(name) })
+    );
 }
 
 export function deleteDatabase(token, { owner: { login }, name }) {
-  return jf(token, `repos/${login}/${name}`, { method: 'DELETE' })
+  return jf(token, `repos/${login}/${toRepoName(name)}`, { method: 'DELETE' })
     .then(expectStatus(204));
 }
