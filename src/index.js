@@ -9,8 +9,10 @@ const render = el => {
   document.getElementById('loading-indicator').className += 'loaded';
 };
 
+const REQUIRED_SCOPES = 'repo';
+
 requireGitHubLogin({
-  scope: 'repo',
+  scope: REQUIRED_SCOPES,
   client_id: '5f5b3968f7732c6333da'
 })
   .then(
@@ -27,7 +29,7 @@ requireGitHubLogin({
             <div>
               <button className="btn btn-primary" onClick={e => {
                 e.preventDefault();
-                goToLogin({ scope: 'repo delete_repo', client_id: '5f5b3968f7732c6333da' });
+                goToLogin({ scope: REQUIRED_SCOPES, client_id: '5f5b3968f7732c6333da' });
               }}><i className="fa fa-sign-in"/> log in
               </button>
             </div>
