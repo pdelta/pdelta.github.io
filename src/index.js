@@ -22,10 +22,10 @@ requireGitHubLogin({
         <div style={{ width: '100vw', height: '100vh' }}
              className="display-flex align-items-center justify-content-center">
           <div className="text-center">
-            <div className="alert alert-warning">{error.message}</div>
+            <div className="alert alert-info">{error.message}</div>
 
             <div>
-              <button className="btn btn-primary btn-lg" onClick={e => {
+              <button className="btn btn-primary" onClick={e => {
                 e.preventDefault();
                 goToLogin({ scope: 'repo delete_repo', client_id: '5f5b3968f7732c6333da' });
               }}><i className="fa fa-sign-in"/> log in

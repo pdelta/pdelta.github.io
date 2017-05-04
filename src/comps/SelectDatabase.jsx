@@ -6,7 +6,7 @@ export default class SelectDatabase extends Component {
       <div>
         <h1>Welcome</h1>
         <p className="lead">
-          Use the panel to create and select a database.
+          Use the panel to create and select a database
         </p>
       </div>
     );
