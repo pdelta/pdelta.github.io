@@ -93,8 +93,8 @@ export default class Passwords extends Component {
     }
   };
 
-  saveChanges = decodedData => {
-    console.log(decodedData);
+  mergeChanges = decodedData => {
+    this.setState({ decodedData });
   };
 
   render() {
@@ -102,7 +102,7 @@ export default class Passwords extends Component {
     const { database } = this.props;
 
     if (decodedData !== null) {
-      return <DatabaseData data={decodedData} database={database} onChange={this.saveChanges}/>;
+      return <DatabaseData data={decodedData} database={database} onChange={this.mergeChanges}/>;
     }
 
     if (promise !== null) {
@@ -113,7 +113,7 @@ export default class Passwords extends Component {
 
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} style={{ maxWidth: 300 }}>
           <div className="form-group">
             <label htmlFor="password">{isNew ? 'Set Password' : 'Enter Password'}</label>
             <input type="password" id="password" className="form-control" value={password}
