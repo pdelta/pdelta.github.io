@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import _ from 'underscore';
-import { ActiveLi } from './ActiveLi';
-import { Route, Switch } from 'react-router-dom';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import _ from "underscore";
+import { ActiveLi } from "./ActiveLi";
+import { Route, Switch } from "react-router-dom";
+import StoreForm from "./StoreForm";
 
 
 export default class DatabaseData extends Component {
@@ -16,7 +17,6 @@ export default class DatabaseData extends Component {
 
   render() {
     const { database: { owner: { login }, name }, data } = this.props;
-    const stores = _.keys(data);
 
     return (
       <div>
@@ -24,17 +24,22 @@ export default class DatabaseData extends Component {
           <Route path={`/db/${login}/${name}/:store`}
                  component={
                    ({ match: { params: { store } } }) => (
-                     data[ store ] ? <span>{store}</span> :
-                       <div className="alert alert-warning">invalid item!</div>
+                     data[ store ] ?
+                       <StoreForm value={store} onChange={store => console.log(store)}/>
+                       :
+                       <div className="alert alert-warning">
+                         Invalid store!
+                       </div>
                    )
                  }/>
+
           <Route component={({}) => (
-            stores.length > 0 ?
+            data.length > 0 ?
               <ul className="nav nav-pills">
                 {
                   _.map(
-                    stores,
-                    store => (
+                    data,
+                    (storeData, store) => (
                       <ActiveLi key={store} to={`/db/${login}/${name}/${store}`}>{store}</ActiveLi>
                     )
                   )

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { createDatabase, getDatabases } from '../dao';
-import _ from 'underscore';
-import { ActiveLi } from './ActiveLi';
-import NSP from './NSP';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { createDatabase, getDatabases } from "../dao";
+import _ from "underscore";
+import { ActiveLi } from "./ActiveLi";
+import NSP from "./NSP";
 
 export default class DatabaseList extends Component {
   static contextTypes = {
@@ -32,7 +32,10 @@ export default class DatabaseList extends Component {
           databases => this.setState({ promise: null, databases })
         )
         .catch(
-          error => this.setState({ promise: null })
+          error => {
+            this.setState({ promise: null });
+            this.context.onError(error);
+          }
         )
     });
   }
@@ -51,11 +54,14 @@ export default class DatabaseList extends Component {
     this.setState({
       promise: createDatabase(token, { name: newDbName })
         .then(
-          database => this.setState({
-            promise: null,
-            databases: this.state.databases.concat([ database ]),
-            newDbName: ''
-          })
+          database => {
+            this.context.onSuccess(`created database: ${newDbName}`);
+            this.setState({
+              promise: null,
+              databases: this.state.databases.concat([ database ]),
+              newDbName: ''
+            });
+          }
         )
         .catch(error => {
           this.setState({ promise: null });

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import NotificationSystem from 'react-notification-system';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import NotificationSystem from "react-notification-system";
 
 export default class NSP extends Component {
   static childContextTypes = {
@@ -19,8 +19,16 @@ export default class NSP extends Component {
     };
   }
 
+  static propTypes = {
+    messageDefaults: PropTypes.object
+  };
+
+  static defaultProps = {
+    messageDefaults: { position: 'bc' }
+  };
+
   addNotification = (level, message, opts) => this._ns ?
-    this._ns.addNotification({ level, message, ...opts }) :
+    this._ns.addNotification({ ...this.props.messageDefaults, level, message, ...opts }) :
     console.log(message, opts);
 
   handleError = (err, opts) => {
