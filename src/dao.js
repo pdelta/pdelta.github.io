@@ -114,8 +114,3 @@ export function createDatabase(token, database) {
       ({ name, ...rest }) => ({ ...rest, name: toDbName(name) })
     );
 }
-
-export function deleteDatabase(token, { owner: { login }, name }) {
-  return jf(token, `repos/${login}/${toRepoName(name)}`, { method: 'DELETE' })
-    .then(expectStatus(204));
-}
