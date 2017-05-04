@@ -101,7 +101,7 @@ export default class DatabaseList extends Component {
               </div>
 
               <div className="flex-shrink-0" style={{ marginLeft: 10 }}>
-                <button className="btn btn-primary btn-sm" type="submit" disabled={promise !== null}>
+                <button className="btn btn-primary" type="submit" disabled={promise !== null}>
                   <i className="fa fa-plus"/>
                 </button>
               </div>

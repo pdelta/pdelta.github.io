@@ -38,10 +38,6 @@ export function goToLogin({ client_id, scope, redirect_uri }) {
     `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
 }
 
-export function clearToken() {
-  sessionStorage.removeItem(GITHUB_STATE_KEY);
-}
-
 const cleanScopeArray = scopes => _.chain(scopes)
   .filter(s => typeof s === 'string')
   .filter(s => s.trim().length > 0)

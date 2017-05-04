@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import LoginInfo from './LoginInfo';
-import { clearToken } from '../requireGitHubLogin';
 
 export default class Nav extends Component {
   logOut = e => {
     e.preventDefault();
-    clearToken();
+    // remove all session storage and refresh the page
+    sessionStorage.clear();
     location.href = location.origin;
   };
 

@@ -25,7 +25,7 @@ requireGitHubLogin({
             <div className="alert alert-warning">{error.message}</div>
 
             <div>
-              <button className="btn btn-primary btn-sm" onClick={e => {
+              <button className="btn btn-primary btn-lg" onClick={e => {
                 e.preventDefault();
                 goToLogin({ scope: 'repo delete_repo', client_id: '5f5b3968f7732c6333da' });
               }}><i className="fa fa-sign-in"/> log in
