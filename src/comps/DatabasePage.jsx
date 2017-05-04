@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getDatabase } from '../dao';
-import Passwords from './Passwords';
+import { getDatabase } from '../util/dao';
+import DatabasePasswordLayer from './DatabasePasswordLayer';
 import Spinner from './Spinner';
 import _ from 'underscore';
 
@@ -68,7 +68,7 @@ export default class DatabasePage extends Component {
 
         <div>
           {
-            database !== null ? <Passwords database={database}/> : null
+            database !== null ? <DatabasePasswordLayer database={database}/> : null
           }
         </div>
       </div>

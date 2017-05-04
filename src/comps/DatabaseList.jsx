@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { createDatabase, getDatabases } from "../dao";
-import _ from "underscore";
-import { ActiveLi } from "./ActiveLi";
-import NSP from "./NSP";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { createDatabase, getDatabases } from '../util/dao';
+import _ from 'underscore';
+import { ActiveLi } from './ActiveLi';
+import NSP from './NSP';
+import AddDatabaseForm from './AddDatabaseForm';
 
 export default class DatabaseList extends Component {
   static contextTypes = {
@@ -16,7 +17,7 @@ export default class DatabaseList extends Component {
   state = {
     promise: null,
     databases: null,
-    newDbName: ''
+    newDatabase: {}
   };
 
   componentDidMount() {
@@ -40,11 +41,10 @@ export default class DatabaseList extends Component {
     });
   }
 
-  changeNewDbName = ({ target: { value: newDbName } }) => this.setState({ newDbName });
   handleSubmit = e => {
     e.preventDefault();
 
-    const { newDbName, promise } = this.state;
+    const { newDatabase, promise } = this.state;
     const { token } = this.context;
 
     if (promise !== null) {
@@ -52,14 +52,14 @@ export default class DatabaseList extends Component {
     }
 
     this.setState({
-      promise: createDatabase(token, { name: newDbName })
+      promise: createDatabase(token, newDatabase)
         .then(
           database => {
-            this.context.onSuccess(`created database: ${newDbName}`);
+            this.context.onSuccess(`created database: ${database.name}`);
             this.setState({
               promise: null,
               databases: this.state.databases.concat([ database ]),
-              newDbName: ''
+              newDatabase: {}
             });
           }
         )
@@ -70,8 +70,10 @@ export default class DatabaseList extends Component {
     });
   };
 
+  handleNewDatabaseChange = newDatabase => this.setState({ newDatabase });
+
   render() {
-    const { databases, promise, newDbName } = this.state;
+    const { databases, promise, newDatabase } = this.state;
 
     return (
       <div {...this.props}>
@@ -96,26 +98,8 @@ export default class DatabaseList extends Component {
 
         <hr />
 
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label>Add Database</label>
-            <div className="display-flex align-items-center">
-              <div className="flex-grow-1">
-                <input type="text" className="form-control" disabled={promise !== null} value={newDbName}
-                       placeholder="my-passwords"
-                       onChange={this.changeNewDbName}/>
-              </div>
-
-              <div className="flex-shrink-0" style={{ marginLeft: 10 }}>
-                <button className="btn btn-primary" type="submit" disabled={promise !== null}>
-                  <i className="fa fa-plus"/>
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-
-
+        <AddDatabaseForm value={newDatabase} onChange={this.handleNewDatabaseChange} disabled={promise !== null}
+                         onSubmit={this.handleSubmit}/>
       </div>
     );
   }

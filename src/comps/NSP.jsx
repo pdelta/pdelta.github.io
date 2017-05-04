@@ -24,7 +24,7 @@ export default class NSP extends Component {
   };
 
   static defaultProps = {
-    messageDefaults: { position: 'bc' }
+    messageDefaults: { position: 'tc' }
   };
 
   addNotification = (level, message, opts) => this._ns ?

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getProfile } from '../dao';
+import { getProfile } from '../util/dao';
 
 export default class LoginInfo extends Component {
   static contextTypes = {
