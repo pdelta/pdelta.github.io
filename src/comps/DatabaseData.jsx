@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'underscore';
 import NSP from './NSP';
 import EntryList from './EntryList';
+import StoreForm from './StoreForm';
 
 const keyMatches = (str, search) => {
   if (search.trim().toLowerCase().length === 0) {
@@ -62,10 +63,45 @@ export default class DatabaseData extends Component {
   }
 
   handleEntrySelect = editingEntry => this.setState({ editingEntry });
+  cancelEdit = () => {
+    this.handleEntrySelect(null);
+  };
+
+  handleChangeStore = store => {
+    const { onChange, data } = this.props;
+    const { editingEntry } = this.state;
+
+    if (!editingEntry) {
+      return;
+    }
+
+    onChange({ ...data, [editingEntry]: store });
+  };
 
   render() {
     const { data } = this.props,
-      { search } = this.state;
+      { search, editingEntry } = this.state;
+
+    const filteredData = _.omit(data, (data, key) => !keyMatches(key, search));
+
+    if (editingEntry !== null) {
+      return (
+        <div>
+          <StoreForm value={data[ editingEntry ]} onChange={this.handleChangeStore}/>
+
+          <hr />
+
+          <div className="text-center">
+            <button onClick={this.cancelEdit} className="btn btn-warning" style={{ marginRight: 10 }}>
+              <i className="fa fa-chevron-left"/> Cancel
+            </button>
+            <button className="btn btn-success">
+              <i className="fa fa-save"/> Save
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div>
@@ -76,10 +112,9 @@ export default class DatabaseData extends Component {
 
         <div>
           {
-            _.keys(data).length > 0 ?
-              <EntryList data={_.omit(data, (data, key) => !keyMatches(key, search))}
-                         onSelectEntry={this.handleEntrySelect}/> :
-              <div className="alert alert-info">No objects in this database!</div>
+            _.keys(filteredData).length > 0 ?
+              <EntryList entries={_.keys(filteredData)} onSelectEntry={this.handleEntrySelect}/> :
+              <div className="alert alert-info">No matching data!</div>
           }
         </div>
       </div>

@@ -1,5 +1,5 @@
-import React, { PropTypes, PureComponent } from "react";
-import _ from "underscore";
+import React, { PropTypes, PureComponent } from 'react';
+import _ from 'underscore';
 
 export default class StoreForm extends PureComponent {
   static propTypes = {
@@ -9,10 +9,20 @@ export default class StoreForm extends PureComponent {
   static defaultProps = {};
 
   handleChange = data => this.props.onChange({ ...this.props.value, ...data });
-  addItem = () => this.handleChange({ item: 'test' });
+
+  state = { itemName: '' };
+  changeItemName = ({ target: { value: itemName } }) => this.setState({ itemName });
+  addItem = () => {
+    const { itemName } = this.state;
+
+    if (itemName.trim().length > 0 && !this.props.value[ itemName.trim() ]) {
+      this.setState({ itemName: '' }, () => this.handleChange({ [itemName]: '' }));
+    }
+  };
 
   render() {
-    const { value, ...rest } = this.props;
+    const { value, onChange, ...rest } = this.props;
+    const { itemName } = this.state;
 
     return (
       <form {...rest}>
@@ -20,16 +30,37 @@ export default class StoreForm extends PureComponent {
           _.map(
             value,
             (data, key) => (
-              <div className="form-group">
+              <div key={key} className="form-group">
                 <label>{key}</label>
-                <input type="text" className="form-control" value={data}
-                       onChange={() => this.handleChange({ [key]: data })}/>
+                <div className="display-flex">
+                  <div className="flex-grow-1">
+                    <input type="text" className="form-control" value={data}
+                           placeholder={key}
+                           onChange={({ target: { value: data } }) => this.handleChange({ [key]: data })}/>
+                  </div>
+                  <div style={{ marginLeft: 10 }}>
+                    <button type="button" className="btn btn-danger"
+                            onClick={() => this.handleChange(_.omit(value, key))}>
+                      <i className="fa fa-trash"/> Delete
+                    </button>
+                  </div>
+                </div>
               </div>
             )
           )
         }
 
-        <button className="btn btn-primary" onClick={this.addItem}><i className="fa fa-plus"/> Add Data</button>
+        <div className="display-flex">
+          <div className="flex-grow-1">
+            <input type="text" className="form-control" placeholder="Item Name" value={itemName}
+                   onChange={this.changeItemName}/>
+          </div>
+          <div className="flex-shrink-0" style={{ marginLeft: 20 }}>
+            <button type="button" className="btn btn-primary" onClick={this.addItem}>
+              <i className="fa fa-list"/> Add Item
+            </button>
+          </div>
+        </div>
       </form>
     );
   }

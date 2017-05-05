@@ -6,6 +6,7 @@ import { decodeData, encodeData } from '../util/crypt';
 import DatabaseData from './DatabaseData';
 import NSP from './NSP';
 import PasswordForm from './PasswordForm';
+import _ from 'underscore';
 
 // this component deals with fetching the data from the repository and allowing the user to enter a password to then
 // view the decoded data
@@ -53,8 +54,7 @@ export default class DatabasePasswordLayer extends Component {
 
   focusPassword = () => this.refs.passwordForm.focusPassword();
 
-  handleSubmit = e => {
-    e.preventDefault();
+  tryPassword = _.throttle(() => {
     const { passwords: { password }, promise, encryptedData } = this.state;
     const { database: { full_name } } = this.props;
 
@@ -86,13 +86,18 @@ export default class DatabasePasswordLayer extends Component {
       const decodedData = decodeData(encryptedData, password, full_name);
       this.setState({ decodedData }, () => {
         if (decodedData === null) {
-          this.refs.password.select();
+          this.focusPassword();
           this.context.onError('invalid password');
         } else {
-          this.context.onSuccess('success!');
+          this.context.onSuccess('unlocked!');
         }
       });
     }
+  }, 500);
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.tryPassword();
   };
 
   mergeChanges = decodedData => {

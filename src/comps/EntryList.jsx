@@ -4,20 +4,18 @@ import _ from 'underscore';
 
 export default class EntryList extends Component {
   static propTypes = {
-    data: PropTypes.object,
+    entries: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectEntry: PropTypes.func.isRequired
   };
 
   render() {
-    const { data, onSelectEntry } = this.props;
-
-    const keys = _.sortBy(_.keys(data));
+    const { entries, onSelectEntry } = this.props;
 
     return (
       <ul className="nav nav-pills">
         {
           _.map(
-            keys,
+            entries,
             (store) => (
               <li key={store}>
                 <a href="#" onClick={e => {

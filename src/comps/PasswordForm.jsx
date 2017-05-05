@@ -10,7 +10,7 @@ export default class PasswordForm extends PureComponent {
   };
   static defaultProps = {};
 
-  focusPassword = () => this.refs.password.focus();
+  focusPassword = () => this.refs.password.select();
 
   render() {
     const { confirm, onChange, value = {}, ...rest } = this.props;
