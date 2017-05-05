@@ -41,7 +41,7 @@ export default class StoreForm extends PureComponent {
                   </div>
                   <div style={{ marginLeft: 10 }}>
                     <button type="button" className="btn btn-danger"
-                            onClick={() => this.handleChange(_.omit(value, key))}>
+                            onClick={() => onChange(_.omit(value, key))}>
                       <i className="fa fa-trash"/> Delete
                     </button>
                   </div>
