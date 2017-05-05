@@ -35,22 +35,16 @@ export default class NSP extends Component {
   };
 
   addNotification = (type, message, opts) => {
-    const alertId = this._lastId++;
-    const removeAlert = () => this.setState({ alerts: _.filter(this.state.alerts, ({ id }) => id !== alertId) });
+    const { alerts } = this.state;
+    const id = this._lastId++;
 
     this.setState({
-      alerts: [
-        {
+      alerts: [ { timeout: 5000, ...opts, id: id, type, message } ].concat(alerts)
+    });
+  };
 
-          onDismiss: removeAlert,
-          showDismiss: true,
-          ...opts,
-          id: alertId,
-          type,
-          message
-        }
-      ].concat(this.state.alerts)
-    }, () => setTimeout(removeAlert, 5000));
+  dismissAlert = item => {
+    this.setState({ alerts: _.filter(this.state.alerts, ({ id }) => id !== item.id) });
   };
 
   handleError = (err, opts) => {
@@ -70,7 +64,7 @@ export default class NSP extends Component {
 
     return (
       <div>
-        <AlertList alerts={alerts} position="bottom-right"/>
+        <AlertList position="bottom-right" onDismiss={this.dismissAlert} alerts={alerts}/>
         {this.props.children}
       </div>
     );
