@@ -1,5 +1,20 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
+import passwordStrength from '../util/passwordStrength';
+
+const strToClass = str => {
+  const strength = passwordStrength(str);
+  if (strength === 0) {
+    return null;
+  } else if (strength < 2) {
+    return 'has-error';
+  } else if (strength < 5) {
+    return 'has-warning';
+  } else {
+    return 'has-success';
+  }
+};
 
 export default class PasswordForm extends PureComponent {
   static contextTypes = {};
@@ -19,7 +34,7 @@ export default class PasswordForm extends PureComponent {
 
     return (
       <form {...rest}>
-        <div className="form-group">
+        <div className={cx('form-group', strToClass(password))}>
           <label htmlFor="password">{confirm ? 'Set Password' : 'Enter Password'}</label>
           <input type="password" id="password" className="form-control" value={password}
                  placeholder="Password" ref="password" required

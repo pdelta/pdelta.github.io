@@ -54,6 +54,7 @@ export default class StoreForm extends PureComponent {
         <div className="display-flex">
           <div className="flex-grow-1">
             <input type="text" className="form-control" placeholder="Item Name" value={itemName}
+                   onKeyDown={({keyCode}) => keyCode === 13 && this.addItem()}
                    onChange={this.changeItemName}/>
           </div>
           <div className="flex-shrink-0" style={{ marginLeft: 20 }}>
