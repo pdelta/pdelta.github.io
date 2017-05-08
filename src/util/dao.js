@@ -49,14 +49,14 @@ export function createRepository(token) {
     .then(([ repository, readme ]) => repository);
 }
 
-export function saveData(token, owner, data) {
+export function saveData(token, full_name, data) {
   return githubFetch(
     token,
-    `repos/${owner}/${GITLOCK_DB}/contents/${name}`,
+    `repos/${full_name}/contents/data`,
     {
       method: 'PUT',
       body: JSON.stringify({
-        message: `update-db-${name}`,
+        message: `update-db`,
         content: btoa(data)
       })
     })

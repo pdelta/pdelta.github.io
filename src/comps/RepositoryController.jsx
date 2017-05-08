@@ -3,10 +3,10 @@ import { USER_SHAPE } from '../util/shapes';
 import Spinner from './Spinner';
 import { createRepository, getRepository } from '../util/dao';
 import NSP from './NSP';
-import DatabasePasswordLayer from './DatabasePasswordLayer';
+import PasswordController from './PasswordController';
 
-const Welcome = ({ onStart }) => (
-  <div className="jumbotron">
+const Welcome = ({ onStart, ...rest }) => (
+  <div className="jumbotron" {...rest}>
     <h1>Welcome</h1>
     <p>This is a password manager based entirely on GitHub. Looks like this is your first time.</p>
     <p>
@@ -72,11 +72,11 @@ export default class RepositoryController extends Component {
     const { promise, repository } = this.state;
 
     if (repository === null) {
-      return promise !== null ? <Spinner/> : <Welcome onStart={this.start}/>;
+      return promise !== null ? <Spinner/> : <Welcome style={{ marginTop: 20 }} onStart={this.start}/>;
     }
 
     return (
-      <DatabasePasswordLayer database={repository}/>
+      <PasswordController repository={repository}/>
     );
   }
 }

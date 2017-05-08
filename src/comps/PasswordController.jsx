@@ -7,12 +7,13 @@ import DatabaseData from './DatabaseData';
 import NSP from './NSP';
 import PasswordForm from './PasswordForm';
 import _ from 'underscore';
+import { USER_SHAPE } from '../util/shapes';
 
 // this component deals with fetching the data from the repository and allowing the user to enter a password to then
 // view the decoded data
-export default class DatabasePasswordLayer extends Component {
+export default class PasswordController extends Component {
   static contextTypes = {
-    user: PropTypes.string.isRequired,
+    user: USER_SHAPE.isRequired,
     ...NSP.childContextTypes
   };
 
@@ -42,13 +43,15 @@ export default class DatabasePasswordLayer extends Component {
   }
 
   loadData(repository) {
+    const { user: { token } } = this.context;
+
     this.setState({
       passwords: {},
       decodedData: null,
       data: null,
-      promise: getData(this.context.user.token, repository)
+      promise: getData(token, repository.full_name)
+        .catch(error => null)
         .then(encryptedData => this.setState({ encryptedData, promise: null }, this.focusPassword))
-        .catch(error => this.setState({ promise: null }, this.focusPassword))
     });
   }
 
@@ -57,6 +60,7 @@ export default class DatabasePasswordLayer extends Component {
   tryPassword = _.throttle(() => {
     const { passwords: { password }, promise, encryptedData } = this.state;
     const { repository: { full_name } } = this.props;
+    const { user: { token }, onError, onSuccess } = this.context;
 
     if (promise !== null) {
       return;
@@ -66,30 +70,26 @@ export default class DatabasePasswordLayer extends Component {
       this.context.onInfo(`initializing db with password...`);
       // create the data file
       this.setState({
-        promise: saveData(this.context.user.token, this.props.repository, encodeData({}, password, full_name))
+        promise: saveData(token, full_name, encodeData({}, password, full_name))
           .then(
             data => {
-              this.context.onSuccess(`initialized!`);
+              onSuccess(`initialized!`);
               const decodedData = decodeData(data, password, full_name);
 
-              this.setState({ promise: null, encryptedData, decodedData });
+              this.setState({ encryptedData, decodedData });
             }
           )
-          .catch(
-            error => {
-              this.context.onError(error);
-              this.setState({ promise: null });
-            }
-          )
+          .catch(onError)
+          .then(() => this.setState({ promise: null }))
       });
     } else {
       const decodedData = decodeData(encryptedData, password, full_name);
       this.setState({ decodedData }, () => {
         if (decodedData === null) {
           this.focusPassword();
-          this.context.onError('invalid password');
+          onError('invalid password');
         } else {
-          this.context.onSuccess('unlocked!');
+          onSuccess('unlocked!');
         }
       });
     }
