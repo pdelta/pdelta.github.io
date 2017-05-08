@@ -51,7 +51,7 @@ export default class RepositoryController extends Component {
 
   start = () => {
     const { promise } = this.state,
-      { user } = this.context;
+      { user: { token }, onError } = this.context;
 
     if (promise !== null) {
       return;
@@ -59,12 +59,10 @@ export default class RepositoryController extends Component {
 
 
     this.setState({
-      promise: createRepository(user.token)
+      promise: createRepository(token)
         .then(repository => this.setState({ repository }))
-        .catch(this.context.onError)
-        .then(
-          () => this.setState({ promise: null })
-        )
+        .catch(onError)
+        .then(() => this.setState({ promise: null }))
     });
   };
 
@@ -72,7 +70,7 @@ export default class RepositoryController extends Component {
     const { promise, repository } = this.state;
 
     if (repository === null) {
-      return promise !== null ? <Spinner/> : <Welcome style={{ marginTop: 20 }} onStart={this.start}/>;
+      return promise !== null ? <Spinner/> : <Welcome onStart={this.start}/>;
     }
 
     return (

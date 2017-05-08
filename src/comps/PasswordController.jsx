@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getData, saveData } from '../util/dao';
+import { getEncryptedData, saveEncryptedData } from '../util/dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../util/crypt';
 import DatabaseData from './DatabaseData';
@@ -49,7 +49,7 @@ export default class PasswordController extends Component {
       passwords: {},
       decodedData: null,
       data: null,
-      promise: getData(token, repository.full_name)
+      promise: getEncryptedData(token, repository.full_name)
         .catch(error => null)
         .then(encryptedData => this.setState({ encryptedData, promise: null }, this.focusPassword))
     });
@@ -60,17 +60,20 @@ export default class PasswordController extends Component {
   tryPassword = _.throttle(() => {
     const { passwords: { password }, promise, encryptedData } = this.state;
     const { repository: { full_name } } = this.props;
-    const { user: { token }, onError, onSuccess } = this.context;
+    const { user: { token }, onInfo, onError, onSuccess } = this.context;
 
     if (promise !== null) {
       return;
     }
 
     if (encryptedData === null) {
-      this.context.onInfo(`initializing db with password...`);
+      onInfo(`initializing db with password...`);
+
+      const encryptedData = encodeData({}, password, full_name);
+
       // create the data file
       this.setState({
-        promise: saveData(token, full_name, encodeData({}, password, full_name))
+        promise: saveEncryptedData(token, full_name, encryptedData)
           .then(
             data => {
               onSuccess(`initialized!`);

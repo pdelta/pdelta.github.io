@@ -85,6 +85,6 @@ export default function requireGitHubLogin({ scope, client_id }) {
     return accessTokenToObject({ token: storedToken, scope })
       .catch(handleError);
   } else {
-    return handleError(new Error('not logged in'));
+    return handleError(new Error('not signed in'));
   }
 }

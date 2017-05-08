@@ -49,21 +49,21 @@ export function createRepository(token) {
     .then(([ repository, readme ]) => repository);
 }
 
-export function saveData(token, full_name, data) {
+export function saveEncryptedData(token, repositoryFullName, encryptedData) {
   return githubFetch(
     token,
-    `repos/${full_name}/contents/data`,
+    `repos/${repositoryFullName}/contents/data`,
     {
       method: 'PUT',
       body: JSON.stringify({
         message: `update-db`,
-        content: btoa(data)
+        content: btoa(encryptedData)
       })
     })
     .then(expectStatus(201));
 }
 
-export function getData(token, full_name) {
+export function getEncryptedData(token, full_name) {
   return githubFetch(token, `repos/${full_name}/contents/data`)
     .then(expectStatus(200))
     .then(toJson)

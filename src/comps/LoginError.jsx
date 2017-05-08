@@ -23,7 +23,7 @@ export default class LoginError extends PureComponent {
             <button className="btn btn-primary" onClick={e => {
               e.preventDefault();
               goToLogin(loginParams);
-            }}><i className="fa fa-sign-in"/> log in
+            }}><i className="fa fa-sign-in"/> sign in
             </button>
           </div>
         </div>

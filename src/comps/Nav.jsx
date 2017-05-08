@@ -17,7 +17,7 @@ export default class Nav extends Component {
     const { user: { profile: { name } } } = this.context;
 
     return (
-      <nav className="navbar navbar-inverse navbar-static-top" style={{ margin: 0 }}>
+      <nav className="navbar navbar-inverse navbar-static-top">
         <div className="container-fluid">
 
           <div className="navbar-header">
