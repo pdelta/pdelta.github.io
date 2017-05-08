@@ -35,6 +35,10 @@ export default class EntryNav extends Component {
     this.props.history.push(`?search=${search}`);
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+  };
+
   render() {
     const { entries, location: { search } } = this.props;
     const data = qs.parse(search.substr(1)),
@@ -46,7 +50,7 @@ export default class EntryNav extends Component {
 
     return (
       <div className="container-fluid">
-        <form className="display-flex">
+        <form className="display-flex" onSubmit={this.handleSubmit}>
           <div className="flex-grow-1">
             <input type="search" ref="search" className="form-control"
                    value={data ? data.search || '' : ''}
@@ -55,7 +59,9 @@ export default class EntryNav extends Component {
           </div>
 
           <div className="flex-shrink-0" style={{ marginLeft: 12 }}>
-            <button type="submit" disabled={false} className="btn btn-primary">Go</button>
+            <button type="submit" disabled={false} className="btn btn-primary">
+              <i className="fa fa-plus"/> Add
+            </button>
           </div>
         </form>
 

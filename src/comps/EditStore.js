@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import _ from 'underscore';
-import NSP from './NSP';
 import StoreForm from './StoreForm';
-import { Link, Route, Switch } from 'react-router-dom';
-import EntryNav from './EntryNav';
+import { Link } from 'react-router-dom';
+import controllable from 'react-controllables';
+import PropTypes from 'prop-types';
 
-export default class EditStore extends Component {
+class EditStore extends Component {
+  static propTypes = {
+    value: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
+  };
+
   render() {
     const { value, onChange } = this.props;
 
@@ -28,3 +32,5 @@ export default class EditStore extends Component {
     );
   }
 }
+
+export default controllable(EditStore, [ 'value' ]);

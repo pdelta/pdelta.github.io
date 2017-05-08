@@ -4,6 +4,7 @@ import _ from 'underscore';
 import NSP from './NSP';
 import { Route, Switch } from 'react-router-dom';
 import EntryNav from './EntryNav';
+import EditStore from './EditStore';
 
 export default class DataRouter extends Component {
   static contextTypes = {
@@ -32,6 +33,8 @@ export default class DataRouter extends Component {
     return (
       <Switch>
         <Route path="/" exact component={props => <EntryNav entries={_.keys(decodedData)} {...props}/>}/>
+        <Route path="/:store"
+               component={props => <EditStore defaultValue={decodedData[ props.match.params.store ]} {...props}/>}/>
       </Switch>
     );
   }
