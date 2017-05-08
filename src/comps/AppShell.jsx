@@ -10,7 +10,7 @@ export default class AppShell extends Component {
       <NSP>
         <div>
           <Nav/>
-          <div className="container">
+          <div>
             {
               children
             }

@@ -124,7 +124,7 @@ export default class PasswordController extends Component {
     }
 
     return (
-      <div>
+      <div className="container">
         <h1 className="page-header">{encryptedData === null ? 'Set Password' : 'Enter Password'}</h1>
         <PasswordForm
           ref="passwordForm"

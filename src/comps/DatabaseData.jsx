@@ -26,7 +26,7 @@ export default class DatabaseData extends Component {
   static propTypes = {
     database: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
   };
   static defaultProps = {};
 
@@ -104,7 +104,7 @@ export default class DatabaseData extends Component {
     }
 
     return (
-      <div>
+      <div className="container-fluid">
         <input type="search" ref="search" className="form-control" value={search} placeholder="Search"
                onChange={this.changeSearch}/>
 

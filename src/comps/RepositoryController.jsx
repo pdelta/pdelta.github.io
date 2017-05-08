@@ -5,15 +5,17 @@ import { createRepository, getRepository } from '../util/dao';
 import NSP from './NSP';
 import PasswordController from './PasswordController';
 
-const Welcome = ({ onStart, ...rest }) => (
-  <div className="jumbotron" {...rest}>
-    <h1>Welcome</h1>
-    <p>This is a password manager based entirely on GitHub. Looks like this is your first time.</p>
-    <p>
-      <button className="btn btn-primary btn-lg" role="button" onClick={onStart}>
-        Get Started
-      </button>
-    </p>
+const Welcome = ({ onStart }) => (
+  <div className="container">
+    <div className="jumbotron">
+      <h1>Welcome</h1>
+      <p>This is a password manager based entirely on GitHub. Looks like this is your first time.</p>
+      <p>
+        <button className="btn btn-primary btn-lg" role="button" onClick={onStart}>
+          Get Started
+        </button>
+      </p>
+    </div>
   </div>
 );
 
