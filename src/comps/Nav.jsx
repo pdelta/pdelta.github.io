@@ -26,7 +26,11 @@ export default class Nav extends Component {
 
           <div className="navbar-right">
             <p className="navbar-text">
-              Signed in as <a className="navbar-link" href="#" onClick={this.logOut}>{name}</a>
+              Signed in as {name}
+            </p>
+
+            <p className="navbar-text">
+              <a className="navbar-link" href="#" onClick={this.logOut}>Sign Out</a>
             </p>
           </div>
         </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getEncryptedData, saveEncryptedData } from '../util/dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../util/crypt';
-import DatabaseData from './DatabaseData';
+import DataRouter from './DataRouter';
 import NSP from './NSP';
 import PasswordForm from './PasswordForm';
 import _ from 'underscore';
@@ -105,7 +105,7 @@ export default class PasswordController extends Component {
 
   saveDecodedData = decodedData => {
     const { promise, passwords: { password } } = this.state;
-    const { user: { token }, onInfo, onError, onSuccess, onWarning } = this.context;
+    const { user: { token }, onInfo, onError, onSuccess } = this.context;
     const { repository: { full_name } } = this.props;
 
     if (promise !== null) {
@@ -117,6 +117,7 @@ export default class PasswordController extends Component {
     onInfo(`saving data...`);
 
     this.setState({
+      decodedData,
       promise: saveEncryptedData(token, full_name, encryptedData)
         .then(
           () => onSuccess(`data saved!`)
@@ -136,7 +137,7 @@ export default class PasswordController extends Component {
 
     if (decodedData !== null) {
       return (
-        <DatabaseData data={decodedData} database={repository} onChange={this.saveDecodedData}/>
+        <DataRouter onChange={this.saveDecodedData} decodedData={decodedData}/>
       );
     }
 

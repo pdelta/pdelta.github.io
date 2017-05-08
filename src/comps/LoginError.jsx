@@ -18,7 +18,9 @@ export default class LoginError extends PureComponent {
       <div style={{ width: '100vw', height: '100vh' }}
            className="display-flex align-items-center justify-content-center">
         <div className="text-center">
-          <Alert level="info">{error.message}</Alert>
+          <Alert level="info">
+            {error.message}
+          </Alert>
 
           <div>
             <button className="btn btn-primary" onClick={e => {

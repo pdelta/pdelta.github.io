@@ -46,6 +46,18 @@ function accessTokenToObject({ token, scope }) {
     );
 }
 
+function getQueryData() {
+  if (typeof location.search === 'string' && location.search.length > 1) {
+    try {
+      return qs.parse(location.search.substr(1));
+    } catch (error) {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
+
 export default function requireGitHubLogin({ scope, client_id }) {
   const storedToken = sessionStorage.getItem(GITHUB_TOKEN_KEY),
     storedState = sessionStorage.getItem(GITHUB_STATE_KEY);
@@ -60,17 +72,19 @@ export default function requireGitHubLogin({ scope, client_id }) {
     return Promise.reject(error);
   };
 
-  if (typeof location.search === 'string' && location.search.length > 1) {
+
+  const queryData = getQueryData();
+
+  if (queryData !== null && typeof queryData.code === 'string' && queryData.code.trim().length > 0) {
     // user attempted to log in
     sessionStorage.removeItem(GITHUB_TOKEN_KEY);
 
     try {
-      const queryData = qs.parse(location.search.substr(1));
-
       return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
         .then(
           token => {
-            location.search = qs.stringify(_.omit(queryData, [ 'code', 'state' ]));
+            history.replaceState({}, null, '');
+
             sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
             return accessTokenToObject({ token, scope });
           }
