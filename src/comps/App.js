@@ -1,31 +1,27 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { BrowserRouter , Route, Switch } from 'react-router-dom';
-import DatabasePage from './DatabasePage';
-import SelectDatabase from './SelectDatabase';
+import { BrowserRouter } from 'react-router-dom';
 import AppShell from './AppShell';
+import { USER_SHAPE } from '../util/shapes';
+import RepositoryController from './RepositoryController';
 
 export default class App extends Component {
   static propTypes = {
-    token: PropTypes.string.isRequired
+    user: USER_SHAPE.isRequired
   };
 
   static childContextTypes = {
-    token: PropTypes.string
+    user: USER_SHAPE
   };
 
   getChildContext() {
-    return { token: this.props.token };
+    return { user: this.props.user };
   }
 
   render() {
     return (
       <BrowserRouter>
         <AppShell>
-          <Switch>
-            <Route path="/db/:owner/:repo" component={DatabasePage}/>
-            <Route component={SelectDatabase}/>
-          </Switch>
+          <RepositoryController/>
         </AppShell>
       </BrowserRouter>
     );

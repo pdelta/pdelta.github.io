@@ -1,116 +1,71 @@
-import _ from 'underscore';
-import join from 'url-join';
+import { expectStatus, githubFetch, toJson } from './dao-util';
+import DEFAULT_README from './default-readme';
 
-const ts = () => (new Date()).getTime();
+const GITLOCK_DB = 'gitlock-db';
 
-const GITLOCK_DB_PREFIX = 'gitlock-db-',
-  toRepoName = str => `${GITLOCK_DB_PREFIX}${str}`,
-  toDbName = str => str.substring(GITLOCK_DB_PREFIX.length);
-
-export const expectStatus = (expectedStatus, msg = 'api failure!') =>
-  res => {
-    if (res.status !== expectedStatus) {
-      return res.json()
-        .catch(
-          error => {
-            throw new Error(msg);
-          }
-        )
-        .then(
-          errorJson => {
-            throw new Error(errorJson.message);
-          }
-        );
-    }
-
-    return res;
-  };
-
-const toJson = res => res.json();
-
-const jf = (token, path, options) => fetch(
-  join('https://api.github.com', path),
-  {
-    ...options,
-    mode: 'cors',
-    headers: {
-      ...(options ? options.headers : null),
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `token ${token}`
-    }
-  }
-);
-
-export function getProfile(token) {
-  return jf(token, 'user')
-    .then(expectStatus(200, 'failed to fetch profile'))
-    .then(toJson);
-}
-
-export function getDatabases(token) {
-  return jf(token, `user/repos?visibility=private&_ts=${ts()}`)
-    .then(expectStatus(200, 'failed to list databases'))
-    .then(toJson)
-    .then(
-      repositories => _.filter(repositories, ({ name }) => name.indexOf(GITLOCK_DB_PREFIX) === 0)
-    )
-    .then(
-      repositories => _.map(repositories, ({ name, ...rest }) => ({
-        ...rest,
-        name: toDbName(name)
-      }))
-    );
-}
-
-export function getDatabase(token, owner, name) {
-  return jf(token, `repos/${owner}/${toRepoName(name)}?_ts=${ts()}`)
-    .then(expectStatus(200))
-    .then(toJson)
-    .then(
-      ({ name, ...rest }) => ({ name: toDbName(name), ...rest })
-    );
-}
-
-export function saveData(token, { owner: { login }, name }, data) {
-  return jf(
-    token,
-    `repos/${login}/${toRepoName(name)}/contents/data`,
+/**
+ * Creates or gets a README.md corresponding to a github repository
+ * @param token used to handle the fetch
+ * @param repository in which readme should be fetched/created
+ * @returns {Promise.<TResult>}
+ */
+export function createReadme(token, repository) {
+  return githubFetch(
+    token, `repos/${repository.full_name}/contents/README.md`,
     {
       method: 'PUT',
       body: JSON.stringify({
-        message: `${GITLOCK_DB_PREFIX}update-db`,
-        content: btoa(data)
+        message: 'initialize readme',
+        content: btoa(DEFAULT_README)
       })
     })
-    .then(expectStatus(201))
-    .then(() => getData(token, { owner: { login }, name }));
+    .then(expectStatus(201, 'failed to create readme'));
 }
 
-export function getData(token, { owner: { login }, name }) {
-  return jf(token, `repos/${login}/${toRepoName(name)}/contents/data?_ts=${ts()}`)
-    .then(expectStatus(200))
-    .then(toJson)
-    .then(({ content }) => atob(content));
+/**
+ * Get the gitlock db repository for a particular owner
+ * @param token
+ * @param owner
+ * @returns {Promise.<TResult>}
+ */
+export function getRepository(token, owner) {
+  return githubFetch(token, `repos/${owner}/${GITLOCK_DB}`)
+    .then(expectStatus(200, `failed to find repository ${owner}/${GITLOCK_DB}`))
+    .then(toJson);
 }
 
-export function createDatabase(token, database) {
-  if (database.name.trim().length === 0) {
-    return Promise.reject(new Error('Invalid database name!'));
-  }
-
-  return jf(token, `user/repos`,
-    {
+export function createRepository(token) {
+  return githubFetch(
+    token, `user/repos`, {
       method: 'POST',
       body: JSON.stringify({
-        ...database,
-        name: `${GITLOCK_DB_PREFIX}${database.name}`,
+        name: GITLOCK_DB,
         private: true
       })
     })
-    .then(expectStatus(201))
+    .then(expectStatus(201, 'failed to create repository'))
     .then(toJson)
-    .then(
-      ({ name, ...rest }) => ({ ...rest, name: toDbName(name) })
-    );
+    .then(repository => Promise.all([ repository, createReadme(token, repository) ]))
+    .then(([ repository, readme ]) => repository);
+}
+
+export function saveData(token, owner, data) {
+  return githubFetch(
+    token,
+    `repos/${owner}/${GITLOCK_DB}/contents/${name}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: `update-db-${name}`,
+        content: btoa(data)
+      })
+    })
+    .then(expectStatus(201));
+}
+
+export function getData(token, full_name) {
+  return githubFetch(token, `repos/${full_name}/contents/data`)
+    .then(expectStatus(200))
+    .then(toJson)
+    .then(({ content }) => atob(content));
 }

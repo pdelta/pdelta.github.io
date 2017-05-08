@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import passwordStrength from '../util/passwordStrength';
+import passwordStrength from '../util/password-strength';
 
 const strToClass = str => {
   const strength = passwordStrength(str);

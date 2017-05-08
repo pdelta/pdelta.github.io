@@ -2,7 +2,7 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './comps/App';
-import requireGitHubLogin from './util/requireGitHubLogin';
+import requireGitHubLogin from './util/require-github-login';
 import LoginError from './comps/LoginError';
 
 const render = el => {
@@ -11,9 +11,10 @@ const render = el => {
 };
 
 const params = {
-  scope: 'repo', client_id: '5f5b3968f7732c6333da'
+  scope: 'repo',
+  client_id: '5f5b3968f7732c6333da'
 };
 
 requireGitHubLogin(params)
-  .then(token => render(<App token={token}/>))
+  .then(user => render(<App user={user}/>))
   .catch(error => render(<LoginError loginParams={params} error={error}/>));

@@ -12,12 +12,12 @@ import _ from 'underscore';
 // view the decoded data
 export default class DatabasePasswordLayer extends Component {
   static contextTypes = {
-    token: PropTypes.string.isRequired,
+    user: PropTypes.string.isRequired,
     ...NSP.childContextTypes
   };
 
   static propTypes = {
-    database: PropTypes.object.isRequired
+    repository: PropTypes.object.isRequired
   };
 
   static defaultProps = {};
@@ -32,21 +32,21 @@ export default class DatabasePasswordLayer extends Component {
   };
 
   componentDidMount() {
-    this.loadData(this.props.database);
+    this.loadData(this.props.repository);
   }
 
-  componentWillReceiveProps({ database }) {
-    if (this.props.database.id !== database.id) {
-      this.loadData(database);
+  componentWillReceiveProps({ repository }) {
+    if (this.props.repository.id !== repository.id) {
+      this.loadData(repository);
     }
   }
 
-  loadData(database) {
+  loadData(repository) {
     this.setState({
       passwords: {},
       decodedData: null,
       data: null,
-      promise: getData(this.context.token, database)
+      promise: getData(this.context.user.token, repository)
         .then(encryptedData => this.setState({ encryptedData, promise: null }, this.focusPassword))
         .catch(error => this.setState({ promise: null }, this.focusPassword))
     });
@@ -56,7 +56,7 @@ export default class DatabasePasswordLayer extends Component {
 
   tryPassword = _.throttle(() => {
     const { passwords: { password }, promise, encryptedData } = this.state;
-    const { database: { full_name } } = this.props;
+    const { repository: { full_name } } = this.props;
 
     if (promise !== null) {
       return;
@@ -66,7 +66,7 @@ export default class DatabasePasswordLayer extends Component {
       this.context.onInfo(`initializing db with password...`);
       // create the data file
       this.setState({
-        promise: saveData(this.context.token, this.props.database, encodeData({}, password, full_name))
+        promise: saveData(this.context.user.token, this.props.repository, encodeData({}, password, full_name))
           .then(
             data => {
               this.context.onSuccess(`initialized!`);
@@ -108,11 +108,11 @@ export default class DatabasePasswordLayer extends Component {
 
   render() {
     const { passwords, encryptedData, decodedData, promise } = this.state;
-    const { database } = this.props;
+    const { repository } = this.props;
 
     if (decodedData !== null) {
       return (
-        <DatabaseData data={decodedData} database={database} onChange={this.mergeChanges}/>
+        <DatabaseData data={decodedData} database={repository} onChange={this.mergeChanges}/>
       );
     }
 
@@ -121,10 +121,13 @@ export default class DatabasePasswordLayer extends Component {
     }
 
     return (
-      <PasswordForm
-        ref="passwordForm"
-        onChange={this.changePasswords} value={passwords} onSubmit={this.handleSubmit}
-        confirm={encryptedData === null}/>
+      <div>
+        <h1 className="page-header">{encryptedData === null ? 'Set Password' : 'Enter Password'}</h1>
+        <PasswordForm
+          ref="passwordForm"
+          onChange={this.changePasswords} value={passwords} onSubmit={this.handleSubmit}
+          confirm={encryptedData === null}/>
+      </div>
     );
   }
 }

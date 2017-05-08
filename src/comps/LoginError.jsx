@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { goToLogin } from '../util/requireGitHubLogin';
+import { goToLogin } from '../util/require-github-login';
 import PropTypes from 'prop-types';
 
 export default class LoginError extends PureComponent {
