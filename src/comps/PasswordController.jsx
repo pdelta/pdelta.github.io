@@ -103,8 +103,29 @@ export default class PasswordController extends Component {
     this.tryPassword();
   };
 
-  mergeChanges = decodedData => {
-    this.setState({ decodedData });
+  saveDecodedData = decodedData => {
+    const { promise, passwords: { password } } = this.state;
+    const { user: { token }, onInfo, onError, onSuccess, onWarning } = this.context;
+    const { repository: { full_name } } = this.props;
+
+    if (promise !== null) {
+      return;
+    }
+
+    const encryptedData = encodeData(decodedData, password, full_name);
+
+    onInfo(`saving data...`);
+
+    this.setState({
+      promise: saveEncryptedData(token, full_name, encryptedData)
+        .then(
+          () => onSuccess(`data saved!`)
+        )
+        .catch(onError)
+        .then(
+          () => this.setState({ promise: null, decodedData })
+        )
+    });
   };
 
   changePasswords = passwords => this.setState({ passwords });
@@ -115,7 +136,7 @@ export default class PasswordController extends Component {
 
     if (decodedData !== null) {
       return (
-        <DatabaseData data={decodedData} database={repository} onChange={this.mergeChanges}/>
+        <DatabaseData data={decodedData} database={repository} onChange={this.saveDecodedData}/>
       );
     }
 

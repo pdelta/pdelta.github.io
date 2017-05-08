@@ -4,6 +4,7 @@ import _ from 'underscore';
 import NSP from './NSP';
 import EntryList from './EntryList';
 import StoreForm from './StoreForm';
+import Alert from './Alert';
 
 const keyMatches = (str, search) => {
   if (search.trim().toLowerCase().length === 0) {
@@ -78,6 +79,14 @@ export default class DatabaseData extends Component {
     onChange({ ...data, [editingEntry]: store });
   };
 
+  handleSubmitItem = e => {
+    e.preventDefault();
+    const { search } = this.state;
+    const { data } = this.props;
+
+    this.setState({ editingEntry: search });
+  };
+
   render() {
     const { data } = this.props,
       { search, editingEntry } = this.state;
@@ -86,7 +95,7 @@ export default class DatabaseData extends Component {
 
     if (editingEntry !== null) {
       return (
-        <div>
+        <div className="container">
           <StoreForm value={data[ editingEntry ]} onChange={this.handleChangeStore}/>
 
           <hr />
@@ -103,10 +112,20 @@ export default class DatabaseData extends Component {
       );
     }
 
+    // can only add if search length > 0 && none of the keys match the search
+    const canAddSearch = search.trim().length > 0;
+
     return (
       <div className="container-fluid">
-        <input type="search" ref="search" className="form-control" value={search} placeholder="Search"
-               onChange={this.changeSearch}/>
+        <form className="display-flex" onSubmit={this.handleSubmitItem}>
+          <div className="flex-grow-1">
+            <input type="search" ref="search" className="form-control" value={search} placeholder="Search"
+                   onChange={this.changeSearch}/>
+          </div>
+          <div className="flex-shrink-0" style={{ marginLeft: 12 }}>
+            <button type="submit" disabled={!canAddSearch} className="btn btn-primary">Go</button>
+          </div>
+        </form>
 
         <hr />
 
@@ -114,7 +133,7 @@ export default class DatabaseData extends Component {
           {
             _.keys(filteredData).length > 0 ?
               <EntryList entries={_.keys(filteredData)} onSelectEntry={this.handleEntrySelect}/> :
-              <div className="alert alert-info">No matching data!</div>
+              <Alert level="info">{_.keys(data).length > 0 ? 'No matching data!' : 'No data saved'}</Alert>
           }
         </div>
       </div>

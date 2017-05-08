@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { goToLogin } from '../util/require-github-login';
 import PropTypes from 'prop-types';
+import Alert from './Alert';
 
 export default class LoginError extends PureComponent {
   static contextTypes = {};
@@ -17,7 +18,7 @@ export default class LoginError extends PureComponent {
       <div style={{ width: '100vw', height: '100vh' }}
            className="display-flex align-items-center justify-content-center">
         <div className="text-center">
-          <div className="alert alert-info">{error.message}</div>
+          <Alert level="info">{error.message}</Alert>
 
           <div>
             <button className="btn btn-primary" onClick={e => {
