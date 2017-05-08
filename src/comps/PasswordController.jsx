@@ -133,7 +133,6 @@ export default class PasswordController extends Component {
 
   render() {
     const { passwords, encryptedData, decodedData, promise } = this.state;
-    const { repository } = this.props;
 
     if (decodedData !== null) {
       return (

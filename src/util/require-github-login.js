@@ -83,7 +83,7 @@ export default function requireGitHubLogin({ scope, client_id }) {
       return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
         .then(
           token => {
-            history.replaceState({}, null, '');
+            location.search = '';
 
             sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
             return accessTokenToObject({ token, scope });
