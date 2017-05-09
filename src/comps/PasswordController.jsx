@@ -112,7 +112,7 @@ export default class PasswordController extends Component {
 
   saveChanges = decodedData => {
     const { promise, passwords: { password }, data: { sha } } = this.state;
-    const { user: { token }, onInfo, onError, onSuccess } = this.context;
+    const { user: { token }, onError, onSuccess } = this.context;
     const { repository: { full_name } } = this.props;
 
     if (promise !== null) {

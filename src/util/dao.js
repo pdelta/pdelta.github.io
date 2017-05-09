@@ -3,6 +3,8 @@ import DEFAULT_README from './default-readme';
 
 const GITLOCK_DB = 'gitlock-db';
 
+const ts = () => new Date().getTime();
+
 /**
  * Creates or gets a README.md corresponding to a github repository
  * @param token used to handle the fetch
@@ -29,7 +31,7 @@ export function createReadme(token, repository) {
  * @returns {Promise.<TResult>}
  */
 export function getRepository(token, owner) {
-  return githubFetch(token, `repos/${owner}/${GITLOCK_DB}`)
+  return githubFetch(token, `repos/${owner}/${GITLOCK_DB}?_ts=${ts()}`)
     .then(expectStatus(200, `failed to find repository ${owner}/${GITLOCK_DB}`))
     .then(toJson);
 }
@@ -50,7 +52,7 @@ export function createRepository(token) {
 }
 
 export function getData(token, full_name) {
-  return githubFetch(token, `repos/${full_name}/contents/data`)
+  return githubFetch(token, `repos/${full_name}/contents/data?_ts=${ts()}`)
     .then(expectStatus(200))
     .then(toJson);
 }
