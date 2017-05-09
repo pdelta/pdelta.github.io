@@ -10,32 +10,32 @@ install:
 - "yarn"
 script:
 - "yarn build"
-before_deploy:
-- "rm -rf deploy"
-- "mkdir deploy"
-- "mkdir deploy/no-cache"
-- "mkdir deploy/cache"
-- "cp build/index.html deploy/no-cache/"
-- "cp build/asset-manifest.json deploy/no-cache/"
-- "cp -r build/static deploy/cache/static"
-deploy:
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: io-gitlock
-    local-dir: deploy/cache
-    acl: public_read
-    cache_control: max-age=86400
-    skip_cleanup: true
-    on:
-      tags: true
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: io-gitlock
-    local-dir: deploy/no-cache
-    acl: public_read
-    cache_control: max-age=0
-    skip_cleanup: true
-    on:
-      tags: true
+#before_deploy:
+#- "rm -rf deploy"
+#- "mkdir deploy"
+#- "mkdir deploy/no-cache"
+#- "mkdir deploy/cache"
+#- "cp build/index.html deploy/no-cache/"
+#- "cp build/asset-manifest.json deploy/no-cache/"
+#- "cp -r build/static deploy/cache/static"
+#deploy:
+#  - provider: s3
+#    access_key_id: $AWS_ACCESS_KEY_ID
+#    secret_access_key: $AWS_SECRET_ACCESS_KEY
+#    bucket: io-gitlock
+#    local-dir: deploy/cache
+#    acl: public_read
+#    cache_control: max-age=86400
+#    skip_cleanup: true
+#    on:
+#      tags: true
+#  - provider: s3
+#    access_key_id: $AWS_ACCESS_KEY_ID
+#    secret_access_key: $AWS_SECRET_ACCESS_KEY
+#    bucket: io-gitlock
+#    local-dir: deploy/no-cache
+#    acl: public_read
+#    cache_control: max-age=0
+#    skip_cleanup: true
+#    on:
+#      tags: true
