@@ -12,10 +12,11 @@ class EditStore extends Component {
   };
 
   render() {
-    const { value, onChange } = this.props;
+    const { value, onChange, match: { params: { store } }, onSave } = this.props;
 
     return (
-      <div className="container">
+      <div className="container-fluid">
+        <h1 className="page-header">{store}</h1>
         <StoreForm value={value} onChange={onChange}/>
 
         <hr />
@@ -24,7 +25,7 @@ class EditStore extends Component {
           <Link className="btn btn-warning" style={{ marginRight: 10 }} to="/">
             <i className="fa fa-chevron-left"/> Cancel
           </Link>
-          <button className="btn btn-success">
+          <button className="btn btn-success" onClick={e => onSave(value)}>
             <i className="fa fa-save"/> Save
           </button>
         </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'underscore';
 import { Link } from 'react-router-dom';
 
-const firstChar = str => str.trim()[ 0 ];
+const firstChar = str => str.trim().toUpperCase()[ 0 ];
 
 export default class EntryList extends Component {
   static propTypes = {

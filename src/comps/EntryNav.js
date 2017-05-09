@@ -19,10 +19,13 @@ const keyMatches = (str, search) => {
     .value();
 };
 
+const cleanStr = str => str.trim().replace(/\s+/g, ' ');
+
 export default class EntryNav extends Component {
   static propTypes = {
     entries: PropTypes.arrayOf(PropTypes.string).isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    onAddEntry: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -35,31 +38,30 @@ export default class EntryNav extends Component {
     this.props.history.push(`?search=${search}`);
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-  };
-
   render() {
-    const { entries, location: { search } } = this.props;
-    const data = qs.parse(search.substr(1)),
-      searchString = data ? data.search || '' : '';
+    const { onAddEntry, entries, location: { search: queryParams } } = this.props;
+    const data = qs.parse(queryParams.substr(1)),
+      search = data ? data.search || '' : '';
 
-    const filteredEntries = searchString.trim().length === 0 ?
+    const filteredEntries = search.trim().length === 0 ?
       entries :
-      _.filter(entries, entry => !keyMatches(entry, searchString));
+      _.filter(entries, entry => keyMatches(entry, search));
 
     return (
       <div className="container-fluid">
-        <form className="display-flex" onSubmit={this.handleSubmit}>
+        <form className="display-flex" onSubmit={e => {
+          e.preventDefault();
+          onAddEntry(search);
+        }}>
           <div className="flex-grow-1">
             <input type="search" ref="search" className="form-control"
-                   value={data ? data.search || '' : ''}
-                   placeholder="Search"
-                   onChange={this.changeSearch}/>
+                   value={search} placeholder="Search" onChange={this.changeSearch}/>
           </div>
 
           <div className="flex-shrink-0" style={{ marginLeft: 12 }}>
-            <button type="submit" disabled={false} className="btn btn-primary">
+            <button type="submit" disabled={
+              search.trim().length === 0 || _.any(entries, entry => cleanStr(entry) === cleanStr(search))
+            } className="btn btn-primary">
               <i className="fa fa-plus"/> Add
             </button>
           </div>
@@ -69,7 +71,7 @@ export default class EntryNav extends Component {
 
         <div>
           {
-            entries.length > 0 ?
+            filteredEntries.length > 0 ?
               <EntryList entries={filteredEntries}/> :
               <Alert level="info">{entries.length > 0 ? 'No matching data!' : 'No data saved'}</Alert>
           }

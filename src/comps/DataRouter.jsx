@@ -16,25 +16,25 @@ export default class DataRouter extends Component {
   };
   static defaultProps = {};
 
-  handleChangeStore = store => {
+  handleChangeStore = more => {
     const { onChange, decodedData } = this.props;
-    const { editingEntry } = this.state;
 
-    if (!editingEntry) {
-      return;
-    }
-
-    onChange({ ...decodedData, [editingEntry]: store });
+    onChange({ ...decodedData, ...more });
   };
 
-  render() {
-    const { decodedData } = this.props;
+  handleAddEntry = entry => {
+    this.handleChangeStore({ [entry.trim()]: {} });
+  };
 
+  EntryNav = props => <EntryNav onAddEntry={this.handleAddEntry} entries={_.keys(this.props.decodedData)} {...props}/>;
+  StoreForm = props => <EditStore onSave={store => this.handleChangeStore({ [props.match.params.store]: store })}
+                                  defaultValue={this.props.decodedData[ props.match.params.store ]} {...props}/>;
+
+  render() {
     return (
       <Switch>
-        <Route path="/" exact component={props => <EntryNav entries={_.keys(decodedData)} {...props}/>}/>
-        <Route path="/:store"
-               component={props => <EditStore defaultValue={decodedData[ props.match.params.store ]} {...props}/>}/>
+        <Route path="/" exact component={this.EntryNav}/>
+        <Route path="/:store" component={this.StoreForm}/>
       </Switch>
     );
   }

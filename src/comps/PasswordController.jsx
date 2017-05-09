@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getEncryptedData, saveEncryptedData } from '../util/dao';
+import { getData, saveData } from '../util/dao';
 import Spinner from './Spinner';
 import { decodeData, encodeData } from '../util/crypt';
 import DataRouter from './DataRouter';
@@ -25,10 +25,12 @@ export default class PasswordController extends Component {
 
   state = {
     passwords: {},
-
-    encryptedData: null,
-
     promise: null,
+
+    // this is the information about the repository data file
+    data: null,
+
+    // this is the decoded information from the data.content key
     decodedData: null
   };
 
@@ -46,19 +48,23 @@ export default class PasswordController extends Component {
     const { user: { token } } = this.context;
 
     this.setState({
+      // clear the state
       passwords: {},
       decodedData: null,
       data: null,
-      promise: getEncryptedData(token, repository.full_name)
+
+      // fetch the data
+      promise: getData(token, repository.full_name)
+        .then(data => this.setState({ data }))
         .catch(error => null)
-        .then(encryptedData => this.setState({ encryptedData, promise: null }, this.focusPassword))
+        .then(() => this.setState({ promise: null }, this.focusPassword))
     });
   }
 
   focusPassword = () => this.refs.passwordForm.focusPassword();
 
   tryPassword = _.throttle(() => {
-    const { passwords: { password }, promise, encryptedData } = this.state;
+    const { passwords: { password }, promise, data } = this.state;
     const { repository: { full_name } } = this.props;
     const { user: { token }, onInfo, onError, onSuccess } = this.context;
 
@@ -66,27 +72,28 @@ export default class PasswordController extends Component {
       return;
     }
 
-    if (encryptedData === null) {
+    if (data === null) {
       onInfo(`initializing db with password...`);
 
       const encryptedData = encodeData({}, password, full_name);
 
       // create the data file
       this.setState({
-        promise: saveEncryptedData(token, full_name, encryptedData)
+        promise: saveData(token, full_name, { content: btoa(encryptedData) })
           .then(
             data => {
               onSuccess(`initialized!`);
-              const decodedData = decodeData(data, password, full_name);
 
-              this.setState({ encryptedData, decodedData });
+              // we successfully initialized the data to an empty object
+              this.setState({ data, decodedData: {} });
             }
           )
           .catch(onError)
           .then(() => this.setState({ promise: null }))
       });
     } else {
-      const decodedData = decodeData(encryptedData, password, full_name);
+      const decodedData = decodeData(atob(data.content), password, full_name);
+
       this.setState({ decodedData }, () => {
         if (decodedData === null) {
           this.focusPassword();
@@ -103,8 +110,8 @@ export default class PasswordController extends Component {
     this.tryPassword();
   };
 
-  saveDecodedData = decodedData => {
-    const { promise, passwords: { password } } = this.state;
+  saveChanges = decodedData => {
+    const { promise, passwords: { password }, data: { sha } } = this.state;
     const { user: { token }, onInfo, onError, onSuccess } = this.context;
     const { repository: { full_name } } = this.props;
 
@@ -114,18 +121,12 @@ export default class PasswordController extends Component {
 
     const encryptedData = encodeData(decodedData, password, full_name);
 
-    onInfo(`saving data...`);
-
     this.setState({
       decodedData,
-      promise: saveEncryptedData(token, full_name, encryptedData)
-        .then(
-          () => onSuccess(`data saved!`)
-        )
+      promise: saveData(token, full_name, { sha, content: btoa(encryptedData) })
+        .then(({ content: data }) => this.setState({ data }, () => onSuccess(`saved!`)))
         .catch(onError)
-        .then(
-          () => this.setState({ promise: null, decodedData })
-        )
+        .then(() => this.setState({ promise: null }))
     });
   };
 
@@ -136,7 +137,7 @@ export default class PasswordController extends Component {
 
     if (decodedData !== null) {
       return (
-        <DataRouter onChange={this.saveDecodedData} decodedData={decodedData}/>
+        <DataRouter onChange={this.saveChanges} decodedData={decodedData}/>
       );
     }
 

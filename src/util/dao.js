@@ -49,7 +49,13 @@ export function createRepository(token) {
     .then(([ repository, readme ]) => repository);
 }
 
-export function saveEncryptedData(token, repositoryFullName, encryptedData) {
+export function getData(token, full_name) {
+  return githubFetch(token, `repos/${full_name}/contents/data`)
+    .then(expectStatus(200))
+    .then(toJson);
+}
+
+export function saveData(token, repositoryFullName, options) {
   return githubFetch(
     token,
     `repos/${repositoryFullName}/contents/data`,
@@ -57,15 +63,9 @@ export function saveEncryptedData(token, repositoryFullName, encryptedData) {
       method: 'PUT',
       body: JSON.stringify({
         message: `update-db`,
-        content: btoa(encryptedData)
+        ...options
       })
     })
-    .then(expectStatus(201));
-}
-
-export function getEncryptedData(token, full_name) {
-  return githubFetch(token, `repos/${full_name}/contents/data`)
-    .then(expectStatus(200))
-    .then(toJson)
-    .then(({ content }) => atob(content));
+    .then(expectStatus(200, 'failed to save data'))
+    .then(toJson);
 }
