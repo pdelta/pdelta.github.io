@@ -1,13 +1,10 @@
 # GitLock
 
-Client-side password management repository using only GitHub for a back-end
+Client-side password management repository using only GitHub for a back-end built with React
 
-* Simple open-source codebase
-* UI focused on usability and speed
-* Version control inherently provided by GitHub - never lose your passwords
-* Your data belongs to you
-* Salted key-stretched passwords provide the security you need
+## How it Works
 
-## Usage
-
-_TODO: write me!_
+- **Requires a GitHub subscription**
+- Creates a private `gitlock-db` repository
+- Stores your password in a file called data as a base64 encoded encrypted string AES-encrypted with a key derived from your password 
+- Updates to your database result in commits to the data file
