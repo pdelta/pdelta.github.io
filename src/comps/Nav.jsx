@@ -10,7 +10,7 @@ export default class Nav extends Component {
     e.preventDefault();
     // remove all session storage and refresh the page
     sessionStorage.clear();
-    location.href = location.origin;
+    location.reload();
   };
 
   render() {
