@@ -1,5 +1,5 @@
-import CryptoJS from "crypto-js";
-import PBKDF2 from "crypto-js/pbkdf2";
+import CryptoJS from 'crypto-js';
+import PBKDF2 from 'crypto-js/pbkdf2';
 
 export function randomString(len = 5) {
   let text = '';
@@ -21,13 +21,13 @@ export function stretchKey(password, salt) {
   return PBKDF2(password, salt, { iterations: 10000 }).toString();
 }
 
-export function encodeData(data, password, salt = '') {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), stretchKey(password, salt)).toString();
+export function encodeData(data, password) {
+  return CryptoJS.AES.encrypt(JSON.stringify(data), password).toString();
 }
 
-export function decodeData(data, password, salt = '') {
+export function decodeData(data, password) {
   try {
-    const bytes = CryptoJS.AES.decrypt(data, stretchKey(password, salt));
+    const bytes = CryptoJS.AES.decrypt(data, password);
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   }
   catch (err) {

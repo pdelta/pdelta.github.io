@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getData, saveData } from '../util/dao';
 import Spinner from './Spinner';
-import { decodeData, encodeData } from '../util/crypt';
+import { decodeData, encodeData, stretchKey } from '../util/crypt';
 import DataRouter from './DataRouter';
 import NSP from './NSP';
 import PasswordForm from './PasswordForm';
@@ -25,6 +25,8 @@ export default class PasswordController extends Component {
 
   state = {
     passwords: {},
+    stretchedPass: null,
+
     promise: null,
 
     // this is the information about the repository data file
@@ -72,10 +74,12 @@ export default class PasswordController extends Component {
       return;
     }
 
+    const stretchedPass = stretchKey(password, full_name);
+
     if (data === null) {
       onInfo(`initializing db with password...`);
 
-      const encryptedData = encodeData({}, password, full_name);
+      const encryptedData = encodeData({}, stretchedPass);
 
       // create the data file
       this.setState({
@@ -85,16 +89,16 @@ export default class PasswordController extends Component {
               onSuccess(`initialized!`);
 
               // we successfully initialized the data to an empty object
-              this.setState({ data, decodedData: {} });
+              this.setState({ stretchedPass, data, decodedData: {} });
             }
           )
           .catch(onError)
           .then(() => this.setState({ promise: null }))
       });
     } else {
-      const decodedData = decodeData(atob(data.content), password, full_name);
+      const decodedData = decodeData(atob(data.content), stretchedPass);
 
-      this.setState({ decodedData }, () => {
+      this.setState({ decodedData, stretchedPass }, () => {
         if (decodedData === null) {
           this.focusPassword();
           onError('invalid password');
@@ -111,7 +115,7 @@ export default class PasswordController extends Component {
   };
 
   saveChanges = decodedData => {
-    const { promise, passwords: { password }, data: { sha } } = this.state;
+    const { promise, passwords: { password }, data: { sha }, stretchedPass } = this.state;
     const { user: { token }, onError, onSuccess } = this.context;
     const { repository: { full_name } } = this.props;
 
@@ -119,7 +123,7 @@ export default class PasswordController extends Component {
       return;
     }
 
-    const encryptedData = encodeData(decodedData, password, full_name);
+    const encryptedData = encodeData(decodedData, stretchedPass);
 
     this.setState({
       decodedData,
