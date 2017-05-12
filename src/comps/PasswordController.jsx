@@ -76,8 +76,6 @@ export default class PasswordController extends Component {
 
     const stretchedPass = stretchKey(password, full_name);
 
-    debugger;
-
     if (data === null) {
       onInfo(`initializing db with password...`);
 
@@ -89,12 +87,11 @@ export default class PasswordController extends Component {
           .then(
             data => {
               onSuccess(`initialized!`);
-              debugger;
 
-              // we successfully initialized the data to an empty object
-              this.setState({ stretchedPass, data, decodedData: {} });
+              return getData(token, full_name);
             }
           )
+          .then(data => this.setState({ data, decodedData: {}, stretchedPass }))
           .catch(onError)
           .then(() => this.setState({ promise: null }))
       });
