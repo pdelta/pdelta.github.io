@@ -68,6 +68,6 @@ export function saveData(token, repositoryFullName, options) {
         ...options
       })
     })
-    .then(expectStatus(200, 'failed to save data'))
+    .then(expectStatus([ 200, 201 ], 'failed to save data'))
     .then(toJson);
 }

@@ -9,12 +9,20 @@ const Welcome = ({ onStart }) => (
   <div className="container">
     <div className="jumbotron">
       <h1>Welcome</h1>
-      <p>This is a password manager based entirely on GitHub. Looks like this is your first time.</p>
       <p>
-        <button className="btn btn-primary btn-lg" role="button" onClick={onStart}>
-          Get Started
-        </button>
+        This is a password manager based entirely on GitHub
       </p>
+      <p>
+        Looks like this is your first time
+      </p>
+      <p>
+        To use GitLock, you will need to have a private GitHub subscription so that we can store your data in a
+        your own private GitHub repository
+      </p>
+
+      <button style={{ marginTop: 20 }} className="btn btn-primary btn-lg" role="button" onClick={onStart}>
+        Get Started
+      </button>
     </div>
   </div>
 );

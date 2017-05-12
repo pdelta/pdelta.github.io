@@ -76,6 +76,8 @@ export default class PasswordController extends Component {
 
     const stretchedPass = stretchKey(password, full_name);
 
+    debugger;
+
     if (data === null) {
       onInfo(`initializing db with password...`);
 
@@ -87,6 +89,7 @@ export default class PasswordController extends Component {
           .then(
             data => {
               onSuccess(`initialized!`);
+              debugger;
 
               // we successfully initialized the data to an empty object
               this.setState({ stretchedPass, data, decodedData: {} });
@@ -115,7 +118,7 @@ export default class PasswordController extends Component {
   };
 
   saveChanges = decodedData => {
-    const { promise, passwords: { password }, data: { sha }, stretchedPass } = this.state;
+    const { promise, data: { sha }, stretchedPass } = this.state;
     const { user: { token }, onError, onSuccess } = this.context;
     const { repository: { full_name } } = this.props;
 
@@ -137,7 +140,7 @@ export default class PasswordController extends Component {
   changePasswords = passwords => this.setState({ passwords });
 
   render() {
-    const { passwords, encryptedData, decodedData, promise } = this.state;
+    const { passwords, data, decodedData, promise } = this.state;
 
     if (decodedData !== null) {
       return (
@@ -151,11 +154,11 @@ export default class PasswordController extends Component {
 
     return (
       <div className="container">
-        <h1 className="page-header">{encryptedData === null ? 'Set Password' : 'Enter Password'}</h1>
+        <h1 className="page-header">{data === null ? 'Set Password' : 'Enter Password'}</h1>
         <PasswordForm
           ref="passwordForm"
           onChange={this.changePasswords} value={passwords} onSubmit={this.handleSubmit}
-          confirm={encryptedData === null}/>
+          confirm={data === null}/>
       </div>
     );
   }

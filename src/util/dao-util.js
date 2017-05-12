@@ -1,22 +1,26 @@
 import join from 'url-join';
+import _ from 'underscore';
 
-export const expectStatus = (expectedStatus, msg = 'api failure!') =>
+export const expectStatus = (expectedStatus = 200, msg = 'api failure!') =>
   res => {
-    if (res.status !== expectedStatus) {
-      return res.json()
-        .catch(
-          error => {
-            throw new Error(msg);
-          }
-        )
-        .then(
-          errorJson => {
-            throw new Error(errorJson.message);
-          }
-        );
+    if (_.isArray(expectedStatus) && _.contains(expectedStatus, res.status)) {
+      return res;
+    } else if (expectedStatus === res.status) {
+      return res;
     }
 
-    return res;
+    return res.json()
+      .catch(
+        error => {
+          console.error(error);
+          throw new Error(msg);
+        }
+      )
+      .then(
+        errorJson => {
+          throw new Error(errorJson.message);
+        }
+      );
   };
 
 export const toJson = res => res.json();
