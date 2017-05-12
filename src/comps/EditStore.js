@@ -11,12 +11,20 @@ class EditStore extends Component {
     onSave: PropTypes.func.isRequired
   };
 
+  handleEscape = e => {
+    // escape key
+    if (e.keyCode === 27) {
+      this.goHome();
+    }
+  };
+
   render() {
     const { value, onChange, match: { params: { store } }, onSave } = this.props;
 
     return (
-      <div className="container-fluid">
-        <h1 className="page-header">{store}</h1>
+      <div ref="container" className="container-fluid" onKeyDown={this.handleEscape}>
+        <h2 className="page-header">Edit: <em>{store}</em></h2>
+
         <StoreForm value={value} onChange={onChange}/>
 
         <hr />
