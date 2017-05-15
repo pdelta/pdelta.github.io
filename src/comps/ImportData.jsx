@@ -8,11 +8,9 @@ export default class ImportData extends Component {
   static defaultProps = {};
 
   render() {
-    const { ...rest } = this.props;
-
     return (
       <div className="container-fluid">
-      <p className="lead">Coming soon!</p>
+        <p className="lead">Coming soon!</p>
       </div>
     );
   }
