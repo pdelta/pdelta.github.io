@@ -1,4 +1,4 @@
-import { expectStatus, githubFetch, toJson } from './dao-util';
+import { expectSuccess, githubFetch, toJson } from './dao-util';
 import DEFAULT_README from './default-readme';
 
 const GITLOCK_DB = 'gitlock-db';
@@ -21,7 +21,7 @@ export function createReadme(token, repository) {
         content: btoa(DEFAULT_README)
       })
     })
-    .then(expectStatus(201, 'failed to create readme'));
+    .then(expectSuccess('failed to create readme'));
 }
 
 /**
@@ -32,7 +32,7 @@ export function createReadme(token, repository) {
  */
 export function getRepository(token, owner) {
   return githubFetch(token, `repos/${owner}/${GITLOCK_DB}?_ts=${ts()}`)
-    .then(expectStatus(200, `failed to find repository ${owner}/${GITLOCK_DB}`))
+    .then(expectSuccess(`failed to find repository ${owner}/${GITLOCK_DB}`))
     .then(toJson);
 }
 
@@ -45,7 +45,7 @@ export function createRepository(token) {
         private: true
       })
     })
-    .then(expectStatus(201, 'failed to create repository'))
+    .then(expectSuccess('failed to create repository'))
     .then(toJson)
     .then(repository => Promise.all([ repository, createReadme(token, repository) ]))
     .then(([ repository, readme ]) => repository);
@@ -53,7 +53,7 @@ export function createRepository(token) {
 
 export function getData(token, full_name) {
   return githubFetch(token, `repos/${full_name}/contents/data?_ts=${ts()}`)
-    .then(expectStatus(200))
+    .then(expectSuccess())
     .then(toJson);
 }
 
@@ -68,6 +68,6 @@ export function saveData(token, repositoryFullName, options) {
         ...options
       })
     })
-    .then(expectStatus([ 200, 201 ], 'failed to save data'))
+    .then(expectSuccess('failed to save data'))
     .then(toJson);
 }

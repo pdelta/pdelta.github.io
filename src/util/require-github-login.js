@@ -1,7 +1,7 @@
 import qs from 'qs';
 import _ from 'underscore';
 import { randomString } from './crypt';
-import { expectStatus, githubFetch } from './dao-util';
+import { expectSuccess, githubFetch } from './dao-util';
 import tradeCodeForToken from './trade-code-for-token';
 
 const GITHUB_STATE_KEY = 'github_state',
@@ -29,7 +29,7 @@ function accessTokenToObject({ token, scope }) {
   );
 
   return githubFetch(token, 'user')
-    .then(expectStatus(200, 'failed to get user'))
+    .then(expectSuccess('failed to get user'))
     .then(
       res => {
         const scopes = cleanScopeArray(res.headers.get('X-OAuth-Scopes').split(','));
@@ -83,7 +83,7 @@ export default function requireGitHubLogin({ scope, client_id }) {
       return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
         .then(
           token => {
-            location.search = '';
+            history.replaceState(null, null, window.location.origin);
 
             sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
             return accessTokenToObject({ token, scope });
