@@ -13,20 +13,23 @@ export default class EntryList extends Component {
   render() {
     const { entries } = this.props;
 
-    const groupedEntries = _.groupBy(entries, firstChar);
+    const groupedEntries = _.chain(entries)
+      .groupBy(firstChar)
+      .mapObject(charEntries => _.sortBy(charEntries, e => e.toLowerCase().trim()))
+      .value();
 
     return (
       <div>
         {
           _.map(
-            groupedEntries,
-            (group, firstChar) => (
+            _.sortBy(_.keys(groupedEntries)),
+            firstChar => (
               <div key={firstChar}>
                 <h2>{firstChar}</h2>
                 <ul className="nav nav-pills">
                   {
                     _.map(
-                      group,
+                      groupedEntries[ firstChar ],
                       store => (
                         <li key={store}>
                           <Link to={store}>{store}</Link>
