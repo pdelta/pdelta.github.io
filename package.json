@@ -16,8 +16,7 @@
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "underscore": "^1.8.3",
-    "url-join": "^2.0.1",
-    "whatwg-fetch": "^2.0.3"
+    "url-join": "^2.0.1"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
