@@ -3,7 +3,7 @@ import { USER_SHAPE } from '../util/shapes';
 
 export default class Nav extends Component {
   static contextTypes = {
-    user: USER_SHAPE.isRequired
+    user: USER_SHAPE
   };
 
   logOut = e => {
@@ -14,25 +14,31 @@ export default class Nav extends Component {
   };
 
   render() {
-    const { user: { profile: { name } } } = this.context;
+    const { user } = this.context;
 
     return (
       <nav className="navbar navbar-default navbar-static-top">
         <div className="container-fluid">
 
           <div className="navbar-header">
-            <a className="navbar-brand" href={location.origin}>GitLock <i className="fa fa-lock"/></a>
+            <a className="navbar-brand" href={location.origin}>
+              GitLock {process.env.REACT_APP_GIT_VERSION}
+            </a>
           </div>
 
-          <div className="navbar-right">
-            <p className="navbar-text">
-              Signed in as {name}
-            </p>
+          {
+            user ? (
+              <div className="navbar-right">
+                <p className="navbar-text">
+                  Signed in as {user.profile.name}
+                </p>
 
-            <p className="navbar-text">
-              <a className="navbar-link" href="#" onClick={this.logOut}>Sign Out</a>
-            </p>
-          </div>
+                <p className="navbar-text">
+                  <a className="navbar-link" href="#" onClick={this.logOut}>Sign Out</a>
+                </p>
+              </div>
+            ) : null
+          }
         </div>
       </nav>
     );

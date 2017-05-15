@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { goToLogin } from '../util/require-github-login';
 import PropTypes from 'prop-types';
 import Alert from './Alert';
+import Nav from './Nav';
 
 export default class LoginError extends PureComponent {
   static contextTypes = {};
@@ -15,14 +16,16 @@ export default class LoginError extends PureComponent {
     const { error, loginParams } = this.props;
 
     return (
-      <div style={{ width: '100vw', height: '100vh' }}
-           className="display-flex align-items-center justify-content-center">
-        <div className="text-center">
+      <div>
+        <Nav/>
+
+        <div className="container">
           <Alert level="info">
-            {error.message}
+            <strong>Error: </strong>
+            <span>{error.message}</span>
           </Alert>
 
-          <div>
+          <div className="text-center">
             <button className="btn btn-primary" onClick={e => {
               e.preventDefault();
               goToLogin(loginParams);
