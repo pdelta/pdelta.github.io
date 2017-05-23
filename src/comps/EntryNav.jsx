@@ -19,8 +19,6 @@ const keyMatches = (str, search) => {
     .value();
 };
 
-const cleanStr = str => str.trim().replace(/\s+/g, ' ');
-
 export default class EntryNav extends Component {
   static propTypes = {
     entries: PropTypes.arrayOf(PropTypes.string).isRequired,
