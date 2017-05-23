@@ -43,8 +43,7 @@ export default class EntryNav extends Component {
   handleSearchChange = ({ target: { value: search } }) => this.updateSearch(search);
 
   handleKeyPresses = e => {
-    const { history } = this.props;
-    const { keyCode, metaKey, shiftKey, ctrlKey } = e;
+    const { keyCode, metaKey, ctrlKey } = e;
 
     switch (keyCode) {
       case 27:
