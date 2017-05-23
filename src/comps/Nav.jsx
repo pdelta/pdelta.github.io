@@ -10,6 +10,7 @@ export default class Nav extends Component {
     e.preventDefault();
     // remove all session storage and refresh the page
     localStorage.clear();
+    sessionStorage.clear();
     window.location.reload();
   };
 

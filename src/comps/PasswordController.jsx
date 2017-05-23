@@ -9,6 +9,8 @@ import PasswordForm from './PasswordForm';
 import _ from 'underscore';
 import { USER_SHAPE } from '../util/shapes';
 
+const LAST_STRETCHED_PASS_KEY = 'last_stretched_password';
+
 // this component deals with fetching the data from the repository and allowing the user to enter a password to then
 // view the decoded data
 export default class PasswordController extends Component {
@@ -57,13 +59,25 @@ export default class PasswordController extends Component {
 
       // fetch the data
       promise: getData(token, repository.full_name)
-        .then(data => this.setState({ data }))
+        .then(data => {
+          const stretchedPass = sessionStorage.getItem(LAST_STRETCHED_PASS_KEY);
+
+          const decodedData = typeof stretchedPass === 'string' && stretchedPass.length > 0 ?
+            decodeData(atob(data.content), stretchedPass) :
+            null;
+
+          this.setState({ data, decodedData, stretchedPass });
+        })
         .catch(error => null)
         .then(() => this.setState({ promise: null }, this.focusPassword))
     });
   }
 
-  focusPassword = () => this.refs.passwordForm.focusPassword();
+  focusPassword = () => {
+    if (this.refs.passwordForm) {
+      this.refs.passwordForm.focusPassword();
+    }
+  };
 
   tryPassword = _.throttle(() => {
     const { passwords: { password }, promise, data } = this.state;
@@ -103,6 +117,7 @@ export default class PasswordController extends Component {
           this.focusPassword();
           onError('invalid password');
         } else {
+          sessionStorage.setItem(LAST_STRETCHED_PASS_KEY, stretchedPass);
           onSuccess('unlocked!');
         }
       });
