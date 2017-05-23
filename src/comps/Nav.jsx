@@ -9,8 +9,8 @@ export default class Nav extends Component {
   logOut = e => {
     e.preventDefault();
     // remove all session storage and refresh the page
-    sessionStorage.clear();
-    location.reload();
+    window.sessionStorage.clear();
+    window.location.reload();
   };
 
   render() {
@@ -21,7 +21,7 @@ export default class Nav extends Component {
         <div className="container-fluid">
 
           <div className="navbar-header">
-            <a className="navbar-brand" href={location.origin}>
+            <a className="navbar-brand" href={window.location.origin}>
               GitLock {process.env.REACT_APP_GIT_VERSION}
             </a>
           </div>
@@ -34,7 +34,7 @@ export default class Nav extends Component {
                 </p>
 
                 <p className="navbar-text">
-                  <a className="navbar-link" href="#" onClick={this.logOut}>Sign Out</a>
+                  <a className="navbar-link" onClick={this.logOut}>Sign Out</a>
                 </p>
               </div>
             ) : null

@@ -10,9 +10,9 @@ const GITHUB_STATE_KEY = 'github_state',
 export function goToLogin({ client_id, scope, redirect_uri }) {
   // state variable to prevent csrf
   const state = randomString(10);
-  sessionStorage.setItem(GITHUB_STATE_KEY, state);
+  window.sessionStorage.setItem(GITHUB_STATE_KEY, state);
 
-  location.href =
+  window.location.href =
     `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
 }
 
@@ -47,9 +47,9 @@ function accessTokenToObject({ token, scope }) {
 }
 
 function getQueryData() {
-  if (typeof location.search === 'string' && location.search.length > 1) {
+  if (typeof window.location.search === 'string' && window.location.search.length > 1) {
     try {
-      return qs.parse(location.search.substr(1));
+      return qs.parse(window.location.search.substr(1));
     } catch (error) {
       return null;
     }
@@ -83,9 +83,9 @@ export default function requireGitHubLogin({ scope, client_id }) {
       return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
         .then(
           token => {
-            history.replaceState(null, null, window.location.origin);
+            window.history.replaceState(null, null, window.location.origin);
 
-            sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
+            window.sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
             return accessTokenToObject({ token, scope });
           }
         )

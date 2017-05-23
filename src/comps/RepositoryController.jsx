@@ -20,7 +20,7 @@ const Welcome = ({ onStart }) => (
         your own private GitHub repository
       </p>
 
-      <button style={{ marginTop: 20 }} className="btn btn-primary btn-lg" role="button" onClick={onStart}>
+      <button style={{ marginTop: 20 }} className="btn btn-primary btn-lg" onClick={onStart}>
         Get Started
       </button>
     </div>

@@ -3,8 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './comps/App';
 import requireGitHubLogin from './util/require-github-login';
+import registerServiceWorker from './registerServiceWorker';
 import LoginError from './comps/LoginError';
 import config from './config';
+
+registerServiceWorker();
 
 const render = el => {
   ReactDOM.render(el, document.getElementById('root'));

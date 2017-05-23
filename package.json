@@ -19,7 +19,7 @@
     "url-join": "^2.0.1"
   },
   "devDependencies": {
-    "react-scripts": "0.9.5"
+    "react-scripts": "1.0.5"
   },
   "scripts": {
     "start": "REACT_APP_GIT_VERSION=\"$(git describe)\" react-scripts start",
