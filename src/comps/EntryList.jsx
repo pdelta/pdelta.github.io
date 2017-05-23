@@ -21,26 +21,29 @@ export default class EntryList extends Component {
     return (
       <div>
         {
-          _.map(
-            _.sortBy(_.keys(groupedEntries)),
-            firstChar => (
-              <div key={firstChar}>
-                <h2>{firstChar}</h2>
-                <ul className="nav nav-pills">
-                  {
-                    _.map(
-                      groupedEntries[ firstChar ],
-                      store => (
-                        <li key={store}>
-                          <Link to={store}>{store}</Link>
-                        </li>
+          _.chain(groupedEntries)
+            .keys()
+            .sortBy()
+            .map(
+              firstChar => (
+                <div key={firstChar}>
+                  <h2>{firstChar}</h2>
+                  <ul className="nav nav-pills">
+                    {
+                      _.map(
+                        groupedEntries[ firstChar ],
+                        store => (
+                          <li key={store}>
+                            <Link to={store}>{store}</Link>
+                          </li>
+                        )
                       )
-                    )
-                  }
-                </ul>
-              </div>
+                    }
+                  </ul>
+                </div>
+              )
             )
-          )
+            .value()
         }
       </div>
     );
