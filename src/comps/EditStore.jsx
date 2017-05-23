@@ -8,13 +8,24 @@ class EditStore extends Component {
   static propTypes = {
     value: PropTypes.object,
     onChange: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired
   };
 
-  handleEscape = e => {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyPresses);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyPresses);
+  }
+
+  handleKeyPresses = e => {
+    const { history } = this.props;
+
     // escape key
     if (e.keyCode === 27) {
-      this.goHome();
+      history.push('/');
     }
   };
 
@@ -22,7 +33,7 @@ class EditStore extends Component {
     const { value, onChange, match: { params: { store } }, onSave } = this.props;
 
     return (
-      <div ref="container" className="container-fluid" onKeyDown={this.handleEscape}>
+      <div ref="container" className="container-fluid">
         <h2 className="page-header">Edit: <em>{store}</em></h2>
 
         <StoreForm value={value} onChange={onChange}/>
