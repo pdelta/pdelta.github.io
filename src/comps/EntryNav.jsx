@@ -70,10 +70,10 @@ export default class EntryNav extends Component {
       <div className="container-fluid">
         <form className="display-flex" onSubmit={e => {
           e.preventDefault();
-          if (filteredEntries.length === 0) {
-            history.push(search);
-          } else if (filteredEntries.length === 1) {
+          if (filteredEntries.length === 1) {
             history.push(filteredEntries[ 0 ]);
+          } else {
+            history.push(search);
           }
         }}>
           <div className="flex-grow-1">
@@ -82,7 +82,7 @@ export default class EntryNav extends Component {
           </div>
 
           <div className="flex-shrink-0" style={{ marginLeft: 12 }}>
-            <button type="submit" disabled={
+            <button type="submit" tabIndex="-1" disabled={
               search.trim().length === 0
             } className="btn btn-primary">
               <i className="fa fa-search"/> Go
