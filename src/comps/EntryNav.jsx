@@ -24,8 +24,7 @@ const cleanStr = str => str.trim().replace(/\s+/g, ' ');
 export default class EntryNav extends Component {
   static propTypes = {
     entries: PropTypes.arrayOf(PropTypes.string).isRequired,
-    history: PropTypes.object.isRequired,
-    onAddEntry: PropTypes.func.isRequired
+    history: PropTypes.object.isRequired
   };
 
   componentDidMount() {
@@ -61,7 +60,7 @@ export default class EntryNav extends Component {
   };
 
   render() {
-    const { onAddEntry, entries, location: { search: queryParams } } = this.props;
+    const { history, entries, location: { search: queryParams } } = this.props;
     const data = qs.parse(queryParams.substr(1)),
       search = data ? data.search || '' : '';
 
@@ -73,18 +72,22 @@ export default class EntryNav extends Component {
       <div className="container-fluid">
         <form className="display-flex" onSubmit={e => {
           e.preventDefault();
-          onAddEntry(search);
+          if (filteredEntries.length === 0) {
+            history.push(search);
+          } else if (filteredEntries.length === 1) {
+            history.push(filteredEntries[ 0 ]);
+          }
         }}>
           <div className="flex-grow-1">
-            <input type="search" ref="search" className="form-control"
+            <input type="search" ref="search" className="form-control" required
                    value={search} placeholder="Search" onChange={this.handleSearchChange}/>
           </div>
 
           <div className="flex-shrink-0" style={{ marginLeft: 12 }}>
             <button type="submit" disabled={
-              search.trim().length === 0 || _.any(entries, entry => cleanStr(entry) === cleanStr(search))
+              search.trim().length === 0
             } className="btn btn-primary">
-              <i className="fa fa-plus"/> Add
+              <i className="fa fa-search"/> Go
             </button>
           </div>
         </form>

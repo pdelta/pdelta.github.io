@@ -67,7 +67,7 @@ export default class DataRouter extends Component {
           <Route
             path="/:store"
             render={props => <EditStore onSave={store => this.handleChangeStore({ [props.match.params.store]: store })}
-                                        defaultValue={decodedData[ props.match.params.store ]} {...props}/>}/>
+                                        defaultValue={decodedData[ props.match.params.store ] || {}} {...props}/>}/>
         </Switch>
       </div>
     );
