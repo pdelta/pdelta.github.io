@@ -10,7 +10,7 @@ const GITHUB_STATE_KEY = 'github_state',
 export function goToLogin({ client_id, scope, redirect_uri }) {
   // state variable to prevent csrf
   const state = randomString(10);
-  window.sessionStorage.setItem(GITHUB_STATE_KEY, state);
+  localStorage.setItem(GITHUB_STATE_KEY, state);
 
   window.location.href =
     `https://github.com/login/oauth/authorize?${qs.stringify({ client_id, scope, redirect_uri, state })}`;
@@ -59,12 +59,12 @@ function getQueryData() {
 }
 
 export default function requireGitHubLogin({ scope, client_id }) {
-  const storedToken = sessionStorage.getItem(GITHUB_TOKEN_KEY),
-    storedState = sessionStorage.getItem(GITHUB_STATE_KEY);
+  const storedToken = localStorage.getItem(GITHUB_TOKEN_KEY),
+    storedState = localStorage.getItem(GITHUB_STATE_KEY);
 
   const handleError = error => {
     // we are not logged in if we encounter an error
-    sessionStorage.removeItem(GITHUB_TOKEN_KEY);
+    localStorage.removeItem(GITHUB_TOKEN_KEY);
 
     // log the error
     console.error(error);
@@ -77,7 +77,7 @@ export default function requireGitHubLogin({ scope, client_id }) {
 
   if (queryData !== null && typeof queryData.code === 'string' && queryData.code.trim().length > 0) {
     // user attempted to log in
-    sessionStorage.removeItem(GITHUB_TOKEN_KEY);
+    localStorage.removeItem(GITHUB_TOKEN_KEY);
 
     try {
       return tradeCodeForToken({ code: queryData.code, state: storedState, client_id })
@@ -85,7 +85,7 @@ export default function requireGitHubLogin({ scope, client_id }) {
           token => {
             window.history.replaceState(null, null, window.location.origin);
 
-            window.sessionStorage.setItem(GITHUB_TOKEN_KEY, token);
+            localStorage.setItem(GITHUB_TOKEN_KEY, token);
             return accessTokenToObject({ token, scope });
           }
         )

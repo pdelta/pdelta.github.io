@@ -9,7 +9,7 @@ export default class Nav extends Component {
   logOut = e => {
     e.preventDefault();
     // remove all session storage and refresh the page
-    window.sessionStorage.clear();
+    localStorage.clear();
     window.location.reload();
   };
 
