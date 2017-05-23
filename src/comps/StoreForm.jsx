@@ -16,7 +16,7 @@ export default class StoreForm extends PureComponent {
   addItem = () => {
     const { itemName } = this.state;
 
-    if (itemName.trim().length > 0 && !this.props.value[ itemName.trim() ]) {
+    if (itemName !== 'key' && itemName.trim().length > 0 && !this.props.value[ itemName.trim() ]) {
       this.setState({ itemName: '' }, () => this.handleChange({ [itemName]: '' }));
     }
   };

@@ -6,6 +6,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 import EntryNav from './EntryNav';
 import EditStore from './EditStore';
 import ImportData from './ImportData';
+import ExportData from './ExportData';
 import cx from 'classnames';
 
 const NavLink = ({ to, exact, ...rest }) => (
@@ -47,6 +48,7 @@ export default class DataRouter extends Component {
           <ul className="nav nav-tabs">
             <NavLink exact to="/">Database</NavLink>
             <NavLink exact to="/import">Import</NavLink>
+            <NavLink exact to="/export">Export</NavLink>
           </ul>
         </div>
 
@@ -57,6 +59,10 @@ export default class DataRouter extends Component {
           <Route
             path="/import" exact
             render={props => <ImportData onImport={this.handleImport}/>}
+          />
+          <Route
+            path="/export" exact
+            render={props => <ExportData decodedData={decodedData}/>}
           />
           <Route
             path="/:store"
