@@ -29,6 +29,13 @@ class EditStore extends Component {
     }
   };
 
+  handleDelete = e => {
+    const { onSave, history } = this.props;
+
+    onSave(null);
+    history.push('/');
+  };
+
   render() {
     const { value, onChange, match: { params: { store } }, onSave } = this.props;
 
@@ -41,10 +48,15 @@ class EditStore extends Component {
         <hr />
 
         <div className="text-center">
-          <Link className="btn btn-warning" style={{ marginRight: 10 }} to="/">
+          <Link className="btn btn-warning" style={{ margin: 6 }} to="/">
             <i className="fa fa-chevron-left"/> Cancel
           </Link>
-          <button className="btn btn-success" onClick={e => onSave(value)}>
+
+          <button className="btn btn-danger" style={{ margin: 6 }} onClick={this.handleDelete}>
+            <i className="fa fa-save"/> Delete
+          </button>
+
+          <button className="btn btn-success" style={{ margin: 6 }} onClick={e => onSave(value)}>
             <i className="fa fa-save"/> Save
           </button>
         </div>

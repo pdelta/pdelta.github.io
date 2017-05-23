@@ -33,7 +33,7 @@ export default class DataRouter extends Component {
   handleChangeStore = more => {
     const { onChange, decodedData } = this.props;
 
-    onChange({ ...decodedData, ...more });
+    onChange(_.omit({ ...decodedData, ...more }, value => value === null));
   };
 
   handleAddEntry = entry => this.handleChangeStore({ [entry.trim()]: {} });
