@@ -27,13 +27,12 @@ export default class ImportData extends Component {
 
   doImport = () => {
     const { csv } = this.state;
-    const { onError, onSuccess } = this.context;
+    const { onError } = this.context;
 
     const lines = csv.split('\n');
 
     if (lines.length < 2) {
       onError(`no CSV import data entered!`);
-      return;
     }
   };
 
