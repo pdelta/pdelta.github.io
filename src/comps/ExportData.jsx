@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
+import ScrollTopMount from './ScrollTopMount';
 
 const select = ({ target }) => target.select();
 
@@ -30,6 +31,8 @@ export default class ExportData extends PureComponent {
 
     return (
       <div className="container-fluid">
+        <ScrollTopMount/>
+
         <h2>Export Data</h2>
         <p className="lead">Your CSV data is in the textarea below</p>
 

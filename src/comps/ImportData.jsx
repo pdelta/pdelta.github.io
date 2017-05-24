@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import NSP from './NSP';
 import _ from 'underscore';
+import ScrollTopMount from './ScrollTopMount';
 
 const TEXTAREA_PLACEHOLDER = 'key,username,password\ngithub,john,bluegrass\nfacebook,john@x.com,bluegrass123';
 
@@ -71,6 +72,8 @@ export default class ImportData extends Component {
 
     return (
       <div className="container-fluid">
+        <ScrollTopMount/>
+
         <h2>Import Data</h2>
         <p className="lead">
           Use this form to import data from other password managers.

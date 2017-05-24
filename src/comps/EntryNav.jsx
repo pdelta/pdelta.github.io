@@ -4,6 +4,7 @@ import _ from 'underscore';
 import EntryList from './EntryList';
 import Alert from './Alert';
 import * as qs from 'qs';
+import ScrollTopMount from './ScrollTopMount';
 
 const keyMatches = (str, search) => {
   if (search.trim().toLowerCase().length === 0) {
@@ -72,6 +73,7 @@ export default class EntryNav extends Component {
 
     return (
       <div className="container-fluid">
+        <ScrollTopMount/>
         <form className="display-flex" onSubmit={e => {
           e.preventDefault();
           if (filteredEntries.length === 1) {

@@ -3,6 +3,7 @@ import StoreForm from './StoreForm';
 import { Link } from 'react-router-dom';
 import controllable from 'react-controllables';
 import PropTypes from 'prop-types';
+import ScrollTopMount from './ScrollTopMount';
 
 class EditStore extends Component {
   static propTypes = {
@@ -47,7 +48,9 @@ class EditStore extends Component {
     const { name, value, onChange } = this.props;
 
     return (
-      <div ref="container" className="container-fluid">
+      <div className="container-fluid">
+        <ScrollTopMount/>
+
         <h2 className="page-header">Edit: <em>{name}</em></h2>
 
         <StoreForm value={value} onChange={onChange}/>
