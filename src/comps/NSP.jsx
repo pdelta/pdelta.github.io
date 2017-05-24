@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { AlertList } from "react-bs-notifier";
-import _ from "underscore";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { AlertList } from 'react-bs-notifier';
+import _ from 'underscore';
 
 export default class NSP extends Component {
   static childContextTypes = {
     onError: PropTypes.func.isRequired,
     onWarning: PropTypes.func.isRequired,
     onSuccess: PropTypes.func.isRequired,
-    onInfo: PropTypes.func.isRequired,
+    onInfo: PropTypes.func.isRequired
   };
 
   getChildContext() {
@@ -16,7 +16,7 @@ export default class NSP extends Component {
       onError: this.handleError,
       onWarning: this.handleWarning,
       onSuccess: this.handleSuccess,
-      onInfo: this.handleInfo,
+      onInfo: this.handleInfo
     };
   }
 
@@ -50,14 +50,14 @@ export default class NSP extends Component {
   handleError = (err, opts) => {
     if (err instanceof Error) {
       console.error(err);
-      this.addNotification('danger', err.message, { headline: 'error!', ...opts });
+      this.addNotification('danger', err.message, { ...opts });
     } else {
-      this.addNotification('danger', err, { headline: 'error!', ...opts });
+      this.addNotification('danger', err, { ...opts });
     }
   };
-  handleWarning = (msg, opts) => this.addNotification('warning', msg, { headline: 'warning!', ...opts });
-  handleSuccess = (msg, opts) => this.addNotification('success', msg, { headline: 'success!', ...opts });
-  handleInfo = (msg, opts) => this.addNotification('info', msg, { headline: 'info!', ...opts });
+  handleWarning = (msg, opts) => this.addNotification('warning', msg, { ...opts });
+  handleSuccess = (msg, opts) => this.addNotification('success', msg, { ...opts });
+  handleInfo = (msg, opts) => this.addNotification('info', msg, { ...opts });
 
   render() {
     const { alerts } = this.state;

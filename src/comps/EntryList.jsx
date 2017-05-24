@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 import { Link } from 'react-router-dom';
 
-const firstChar = str => str.trim().toUpperCase()[ 0 ];
-
-export default class EntryList extends Component {
+export default class EntryList extends PureComponent {
   static propTypes = {
     entries: PropTypes.arrayOf(PropTypes.string).isRequired
   };
@@ -14,8 +12,8 @@ export default class EntryList extends Component {
     const { entries } = this.props;
 
     const groupedEntries = _.chain(entries)
-      .groupBy(firstChar)
-      .mapObject(charEntries => _.sortBy(charEntries, e => e.toLowerCase().trim()))
+      .groupBy(entry => entry.trim().toUpperCase()[ 0 ])
+      .mapObject(charEntries => _.sortBy(charEntries, entry => entry.toLowerCase().trim()))
       .value();
 
     return (
@@ -34,7 +32,7 @@ export default class EntryList extends Component {
                         groupedEntries[ firstChar ],
                         store => (
                           <li key={store}>
-                            <Link to={store}>{store}</Link>
+                            <Link to={encodeURIComponent(store)}>{store}</Link>
                           </li>
                         )
                       )

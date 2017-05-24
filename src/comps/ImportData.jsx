@@ -92,7 +92,7 @@ export default class ImportData extends Component {
           </div>
 
           <button type="submit" className="btn btn-primary">
-            <i className="fa fa-play"/> Import
+            <i className="fa fa-cloud-upload"/> Import
           </button>
         </form>
       </div>

@@ -15,6 +15,7 @@
     "react-dom": "^15.5.4",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-textarea-autosize": "^5.0.4",
     "underscore": "^1.8.3",
     "url-join": "^2.0.1"
   },

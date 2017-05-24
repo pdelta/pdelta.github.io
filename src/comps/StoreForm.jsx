@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
+import Textarea from 'react-textarea-autosize';
+
 
 export default class StoreForm extends PureComponent {
   static propTypes = {
@@ -26,7 +28,7 @@ export default class StoreForm extends PureComponent {
     const { itemName } = this.state;
 
     return (
-      <form {...rest}>
+      <form {...rest} onSubmit={e => e.preventDefault()}>
         {
           _.map(
             value,
@@ -35,9 +37,10 @@ export default class StoreForm extends PureComponent {
                 <label>{key}</label>
                 <div className="display-flex">
                   <div className="flex-grow-1">
-                    <input type="text" className="form-control" value={data}
-                           placeholder={key}
-                           onChange={({ target: { value: data } }) => this.handleChange({ [key]: data })}/>
+                    <Textarea
+                      className="form-control" value={data}
+                      placeholder={key}
+                      onChange={({ target: { value: data } }) => this.handleChange({ [key]: data })}/>
                   </div>
                   <div style={{ marginLeft: 10 }}>
                     <button type="button" className="btn btn-danger"
@@ -55,9 +58,10 @@ export default class StoreForm extends PureComponent {
 
         <div className="display-flex">
           <div className="flex-grow-1">
-            <input type="text" className="form-control" placeholder="Item Name" value={itemName}
-                   onKeyDown={({ keyCode }) => keyCode === 13 && this.addItem()}
-                   onChange={this.changeItemName}/>
+            <input
+              type="text" className="form-control" placeholder="Item Name" value={itemName}
+              onKeyDown={({ keyCode }) => keyCode === 13 && this.addItem()}
+              onChange={this.changeItemName}/>
           </div>
           <div className="flex-shrink-0" style={{ marginLeft: 20 }}>
             <button type="button" className="btn btn-primary" onClick={this.addItem}>

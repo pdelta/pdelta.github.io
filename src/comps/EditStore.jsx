@@ -6,10 +6,9 @@ import PropTypes from 'prop-types';
 
 class EditStore extends Component {
   static propTypes = {
+    name: PropTypes.string.isRequired,
     value: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired
+    onChange: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -29,19 +28,20 @@ class EditStore extends Component {
     }
   };
 
-  handleDelete = e => {
-    const { onSave, history } = this.props;
+  handleDelete = () => {
+    const { onChange, name } = this.props;
 
-    onSave(null);
-    history.push('/');
+    if (window.confirm(`Delete ${name}?`)) {
+      onChange(null);
+    }
   };
 
   render() {
-    const { value, onChange, match: { params: { store } }, onSave } = this.props;
+    const { name, value, onChange } = this.props;
 
     return (
       <div ref="container" className="container-fluid">
-        <h2 className="page-header">Edit: <em>{store}</em></h2>
+        <h2 className="page-header">Edit: <em>{name}</em></h2>
 
         <StoreForm value={value} onChange={onChange}/>
 
@@ -49,15 +49,11 @@ class EditStore extends Component {
 
         <div className="text-center">
           <Link className="btn btn-warning" style={{ margin: 6 }} to="/">
-            <i className="fa fa-chevron-left"/> Cancel
+            <i className="fa fa-arrow-left"/> Back
           </Link>
 
           <button className="btn btn-danger" style={{ margin: 6 }} onClick={this.handleDelete}>
             <i className="fa fa-save"/> Delete
-          </button>
-
-          <button className="btn btn-success" style={{ margin: 6 }} onClick={e => onSave(value)}>
-            <i className="fa fa-save"/> Save
           </button>
         </div>
       </div>

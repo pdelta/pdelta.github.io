@@ -129,25 +129,29 @@ export default class PasswordController extends Component {
     this.tryPassword();
   };
 
-  saveChanges = decodedData => {
-    const { promise, data: { sha }, stretchedPass } = this.state;
-    const { user: { token }, onError, onSuccess } = this.context;
+  handleChange = decodedData => this.setState({ decodedData }, this.debouncedSync);
+
+  syncToGit = () => {
+    const { promise, data: { sha }, decodedData, stretchedPass } = this.state;
+    const { user: { token }, onError, onInfo } = this.context;
     const { repository: { full_name } } = this.props;
 
     if (promise !== null) {
+      setTimeout(this.syncToGit, 300);
       return;
     }
 
     const encryptedData = encodeData(decodedData, stretchedPass);
 
     this.setState({
-      decodedData,
       promise: saveData(token, full_name, { sha, content: btoa(encryptedData) })
-        .then(({ content: data }) => this.setState({ data }, () => onSuccess(`saved!`)))
+        .then(({ content: data }) => this.setState({ data }, () => onInfo(`synced to git`)))
         .catch(onError)
         .then(() => this.setState({ promise: null }))
     });
   };
+
+  debouncedSync = _.debounce(this.syncToGit, 300);
 
   changePasswords = passwords => this.setState({ passwords });
 
@@ -156,7 +160,7 @@ export default class PasswordController extends Component {
 
     if (decodedData !== null) {
       return (
-        <DataRouter onChange={this.saveChanges} decodedData={decodedData}/>
+        <DataRouter onChange={this.handleChange} decodedData={decodedData}/>
       );
     }
 

@@ -33,7 +33,12 @@ export default class DataRouter extends Component {
   handleChangeStore = more => {
     const { onChange, decodedData } = this.props;
 
-    onChange(_.omit({ ...decodedData, ...more }, value => value === null));
+    onChange(
+      _.omit(
+        { ...decodedData, ...more },
+        value => value === null
+      )
+    );
   };
 
   handleAddEntry = entry => this.handleChangeStore({ [entry.trim()]: {} });
@@ -65,9 +70,20 @@ export default class DataRouter extends Component {
             render={props => <ExportData decodedData={decodedData}/>}
           />
           <Route
-            path="/:store"
-            render={props => <EditStore onSave={store => this.handleChangeStore({ [props.match.params.store]: store })}
-                                        defaultValue={decodedData[ props.match.params.store ] || {}} {...props}/>}/>
+            path="/:store" exact
+            render={
+              props => {
+                const store = decodeURIComponent(props.match.params.store);
+
+                return (
+                  <EditStore
+                    name={store}
+                    onChange={data => this.handleChangeStore({ [store]: data }, true)}
+                    defaultValue={decodedData[ store ] || {}} {...props}
+                  />
+                );
+              }
+            }/>
         </Switch>
       </div>
     );

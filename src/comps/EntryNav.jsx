@@ -27,6 +27,10 @@ export default class EntryNav extends Component {
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyPresses);
+
+    if (window.innerWidth > 768) {
+      this.focusSearch();
+    }
   }
 
   componentWillUnmount() {
