@@ -75,9 +75,9 @@ export default class EntryNav extends Component {
         <form className="display-flex" onSubmit={e => {
           e.preventDefault();
           if (filteredEntries.length === 1) {
-            history.push(filteredEntries[ 0 ]);
+            history.push(encodeURIComponent(filteredEntries[ 0 ]));
           } else {
-            history.push(search);
+            history.push(encodeURIComponent(search));
           }
         }}>
           <div className="flex-grow-1">

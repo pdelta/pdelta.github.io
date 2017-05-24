@@ -8,6 +8,7 @@ import EditStore from './EditStore';
 import ImportData from './ImportData';
 import ExportData from './ExportData';
 import cx from 'classnames';
+import Alert from './Alert';
 
 const NavLink = ({ to, exact, ...rest }) => (
   <Route
@@ -18,6 +19,12 @@ const NavLink = ({ to, exact, ...rest }) => (
         <li role="presentation" className={cx({ active: match !== null })}><Link to={to} {...rest}/></li>
       )
     }/>
+);
+
+const InvalidRoute = ({}) => (
+  <div className="container">
+    <Alert level="info">Invalid URL!</Alert>
+  </div>
 );
 
 export default class DataRouter extends Component {
@@ -89,6 +96,11 @@ export default class DataRouter extends Component {
                 );
               }
             }/>
+
+          <Route
+            path="*"
+            component={InvalidRoute}
+          />
         </Switch>
       </div>
     );
