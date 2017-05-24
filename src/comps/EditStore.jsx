@@ -31,7 +31,7 @@ class EditStore extends Component {
   handleDelete = () => {
     const { onChange, name } = this.props;
 
-    if (window.confirm(`Delete ${name}?`)) {
+    if (window.prompt(`Type to delete: ${name}`) === name) {
       onChange(null);
     }
   };

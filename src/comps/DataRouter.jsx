@@ -78,7 +78,12 @@ export default class DataRouter extends Component {
                 return (
                   <EditStore
                     name={store}
-                    onChange={data => this.handleChangeStore({ [store]: data }, true)}
+                    onChange={data => {
+                      this.handleChangeStore({ [store]: data });
+                      if (data === null) {
+                        props.history.push('/');
+                      }
+                    }}
                     defaultValue={decodedData[ store ] || {}} {...props}
                   />
                 );
