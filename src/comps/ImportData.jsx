@@ -29,7 +29,7 @@ export default class ImportData extends Component {
   doImport = () => {
     const { csv } = this.state;
     const { onImport } = this.props;
-    const { onError, onWarning } = this.context;
+    const { onError, onWarning, onSuccess } = this.context;
 
     const { data, errors, meta } = window.Papa.parse(csv, { header: true });
 
@@ -60,6 +60,8 @@ export default class ImportData extends Component {
       onWarning('no rows could be imported!');
       return;
     }
+
+    onSuccess(`imported data!`);
 
     onImport(treatedData);
   };

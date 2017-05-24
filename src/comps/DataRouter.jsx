@@ -49,7 +49,6 @@ export default class DataRouter extends Component {
   };
 
   handleAddEntry = entry => this.handleChangeStore({ [entry.trim()]: {} });
-  handleImport = data => this.handleChangeStore(data);
 
   render() {
     const { decodedData } = this.props;
@@ -70,7 +69,12 @@ export default class DataRouter extends Component {
             render={props => <EntryNav onAddEntry={this.handleAddEntry} entries={_.keys(decodedData)} {...props}/>}/>
           <Route
             path="/import" exact
-            render={props => <ImportData onImport={this.handleImport}/>}
+            render={props => (
+              <ImportData onImport={data => {
+                this.handleChangeStore(data);
+                props.history.push('/');
+              }}/>
+            )}
           />
           <Route
             path="/export" exact

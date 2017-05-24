@@ -51,7 +51,7 @@ export default class StoreForm extends PureComponent {
                       placeholder={key}
                       onChange={({ target: { value: data } }) => this.handleChange({ [key]: data })}/>
                   </div>
-                  <div style={{ marginLeft: 10 }}>
+                  <div style={{ marginLeft: 10 }}>i
                     <button
                       type="button" className="btn btn-danger"
                       onClick={() => onChange(_.omit(value, key))}>
