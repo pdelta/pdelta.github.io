@@ -129,7 +129,7 @@ export default class PasswordController extends Component {
     this.tryPassword();
   };
 
-  handleChange = decodedData => this.setState({ decodedData }, this.debouncedSync);
+  handleChange = decodedData => this.setState({ decodedData }, this.throttledSync);
 
   syncToGit = () => {
     const { promise, data: { sha }, decodedData, stretchedPass } = this.state;
@@ -137,7 +137,6 @@ export default class PasswordController extends Component {
     const { repository: { full_name } } = this.props;
 
     if (promise !== null) {
-      setTimeout(this.syncToGit, 300);
       return;
     }
 
@@ -151,7 +150,7 @@ export default class PasswordController extends Component {
     });
   };
 
-  debouncedSync = _.debounce(this.syncToGit, 300);
+  throttledSync = _.throttle(this.syncToGit, 300, { leading: false });
 
   changePasswords = passwords => this.setState({ passwords });
 

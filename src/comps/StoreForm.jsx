@@ -23,6 +23,13 @@ export default class StoreForm extends PureComponent {
     }
   };
 
+  handleEnter = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this.addItem();
+    }
+  };
+
   render() {
     const { value, onChange, ...rest } = this.props;
     const { itemName } = this.state;
@@ -60,12 +67,12 @@ export default class StoreForm extends PureComponent {
           <div className="flex-grow-1">
             <input
               type="text" className="form-control" placeholder="Item Name" value={itemName}
-              onKeyDown={({ keyCode }) => keyCode === 13 && this.addItem()}
+              onKeyDown={this.handleEnter}
               onChange={this.changeItemName}/>
           </div>
           <div className="flex-shrink-0" style={{ marginLeft: 20 }}>
             <button type="button" className="btn btn-primary" onClick={this.addItem}>
-              <i className="fa fa-list"/> Add Item
+              <i className="fa fa-plus-circle"/> Add Item
             </button>
           </div>
         </div>
