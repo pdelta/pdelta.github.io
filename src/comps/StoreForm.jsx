@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'underscore';
 import Textarea from 'react-textarea-autosize';
 
+const select = e => e.target.select();
 
 export default class StoreForm extends PureComponent {
   static propTypes = {
@@ -45,13 +46,15 @@ export default class StoreForm extends PureComponent {
                 <div className="display-flex">
                   <div className="flex-grow-1">
                     <Textarea
+                      onFocus={select}
                       className="form-control" value={data}
                       placeholder={key}
                       onChange={({ target: { value: data } }) => this.handleChange({ [key]: data })}/>
                   </div>
                   <div style={{ marginLeft: 10 }}>
-                    <button type="button" className="btn btn-danger"
-                            onClick={() => onChange(_.omit(value, key))}>
+                    <button
+                      type="button" className="btn btn-danger"
+                      onClick={() => onChange(_.omit(value, key))}>
                       <i className="fa fa-trash"/> Delete
                     </button>
                   </div>

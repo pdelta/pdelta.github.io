@@ -22,9 +22,16 @@ class EditStore extends Component {
   handleKeyPresses = e => {
     const { history } = this.props;
 
-    // escape key
-    if (e.keyCode === 27) {
+    const { keyCode, metaKey, ctrlKey } = e;
+
+    if (keyCode === 27) {
+      e.preventDefault();
       history.push('/');
+    } else if (keyCode === 46 || keyCode === 8) {
+      if (metaKey || ctrlKey) {
+        e.preventDefault();
+        this.handleDelete();
+      }
     }
   };
 

@@ -21,7 +21,7 @@ const NavLink = ({ to, exact, ...rest }) => (
     }/>
 );
 
-const InvalidRoute = ({}) => (
+const InvalidRoute = () => (
   <div className="container">
     <Alert level="info">Invalid URL!</Alert>
   </div>
