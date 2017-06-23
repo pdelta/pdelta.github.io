@@ -1,4 +1,7 @@
 language: node_js
+branches:
+  only:
+  - src
 node_js:
 - "node"
 cache: yarn
