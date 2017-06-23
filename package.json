@@ -1,6 +1,6 @@
 {
   "name": "pdelta",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "private": true,
   "homepage": "https://pdelta.github.io",
   "dependencies": {
