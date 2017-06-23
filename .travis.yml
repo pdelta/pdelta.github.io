@@ -15,5 +15,4 @@ deploy:
   local_dir: "build"
   on:
     branch: src
-    tags: true
     target_branch: master
