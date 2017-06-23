@@ -1,4 +1,4 @@
-# [![Build Status](https://travis-ci.org/moodysalem/gitlock.svg?branch=master)](https://travis-ci.org/moodysalem/gitlock) GitLock
+# [![Build Status](https://travis-ci.org/moodysalem/gitlock.svg?branch=master)](https://travis-ci.org/moodysalem/gitlock) pdelta
 
 Client-side password management repository using only GitHub for a back-end built with React
 
