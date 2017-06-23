@@ -16,7 +16,7 @@ const Welcome = ({ onStart }) => (
         Looks like this is your first time
       </p>
       <p>
-        To use GitLock, you will need to have a private GitHub subscription so that we can store your data in a
+        To use pdelta, you will need to have a private GitHub subscription so that we can store your data in a
         your own private GitHub repository
       </p>
 

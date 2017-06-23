@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'development') {
   };
 } else {
   config = {
-    client_id: 'a55e460d255b503e0048'
+    client_id: 'a4875587649de6c23f3d'
   };
 }
 

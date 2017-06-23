@@ -1,7 +1,7 @@
 import { expectSuccess, githubFetch, toJson } from './dao-util';
 import DEFAULT_README from './default-readme';
 
-const GITLOCK_DB = 'gitlock-db';
+const PDELTA_DB = 'pdelta-db';
 
 const ts = () => new Date().getTime();
 
@@ -25,14 +25,14 @@ export function createReadme(token, repository) {
 }
 
 /**
- * Get the gitlock db repository for a particular owner
+ * Get the pdelta db repository for a particular owner
  * @param token
  * @param owner
  * @returns {Promise.<TResult>}
  */
 export function getRepository(token, owner) {
-  return githubFetch(token, `repos/${owner}/${GITLOCK_DB}?_ts=${ts()}`)
-    .then(expectSuccess(`failed to find repository ${owner}/${GITLOCK_DB}`))
+  return githubFetch(token, `repos/${owner}/${PDELTA_DB}?_ts=${ts()}`)
+    .then(expectSuccess(`failed to find repository ${owner}/${PDELTA_DB}`))
     .then(toJson);
 }
 
@@ -41,7 +41,7 @@ export function createRepository(token) {
     token, `user/repos`, {
       method: 'POST',
       body: JSON.stringify({
-        name: GITLOCK_DB,
+        name: PDELTA_DB,
         private: true
       })
     })

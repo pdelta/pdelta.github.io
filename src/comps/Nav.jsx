@@ -23,7 +23,7 @@ export default class Nav extends Component {
 
           <div className="navbar-header">
             <a className="navbar-brand" href={window.location.origin}>
-              GitLock {process.env.REACT_APP_GIT_VERSION}
+              pdelta {process.env.REACT_APP_GIT_VERSION}
             </a>
           </div>
 
