@@ -10,14 +10,14 @@ const Welcome = ({ onStart }) => (
     <div className="jumbotron">
       <h1>Welcome</h1>
       <p>
-        This is a password manager based entirely on GitHub
+        pdelta is a password manager based entirely on GitHub
       </p>
       <p>
         Looks like this is your first time
       </p>
       <p>
-        To use pdelta, you will need to have a private GitHub subscription so that we can store your data in a
-        your own private GitHub repository
+        Your data is stored in a private GitHub repository. 
+        To use pdelta, you will need a GitHub subscription.
       </p>
 
       <button style={{ marginTop: 20 }} className="btn btn-primary btn-lg" onClick={onStart}>
