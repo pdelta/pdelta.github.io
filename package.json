@@ -13,6 +13,7 @@
     "react-bs-notifier": "^4.3.2",
     "react-controllables": "^0.6.0",
     "react-dom": "^15.5.4",
+    "react-github-fork-ribbon": "^0.5.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-textarea-autosize": "^5.0.4",

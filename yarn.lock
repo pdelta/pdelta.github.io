@@ -5075,6 +5075,10 @@ react-error-overlay@^1.0.5:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
+react-github-fork-ribbon@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-github-fork-ribbon/-/react-github-fork-ribbon-0.5.0.tgz#59605ee7abe01fe48f16039dcc7fd82d840b02c5"
+
 "react-jss@>= 5.2 <7":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-jss/-/react-jss-6.1.1.tgz#01a548e6531b691186c3e8d8250980fb2938f1fe"
